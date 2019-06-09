@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">BlunoBle</string>
+
+    <string name="connected_to">Connected to %s</string>
+    <string name="connect_fail">Connection failure</string>
+    <string name="send_data">Send data %s</string>
+    <string name="success">success</string>
+    <string name="failure">failure</string>
 </resources>

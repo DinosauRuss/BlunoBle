@@ -7,6 +7,7 @@ import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
 
     private fun startScan() {
         if (mScanning || !hasPermissions()) {
-            Log.d(Utils.TAG, "cannot scan")
+            Log.d(Utils.TAG, "Cannot start scan")
             return
         }
 
@@ -110,13 +111,13 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         btnConnect.isEnabled = false
 
         // Stops scanning after a period
-        Handler().postDelayed( {
+        Handler().postDelayed({
             stopScan()
         }, SCAN_PERIOD)
     }
 
     private fun stopScan() {
-        if (mScanning && (bleAdapter != null) &&  (bleAdapter?.isEnabled == true) && (bleScanner !=  null)) {
+        if (mScanning && (bleAdapter != null) && (bleAdapter?.isEnabled == true) && (bleScanner != null)) {
             mScanning = false
             bleScanner?.stopScan(leScanCallback)
             toggleButtonStates()
@@ -153,7 +154,8 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         btnConnect.isEnabled = true
         for (device: BluetoothDevice in deviceArray) {
             btnConnect.setOnClickListener {
-                connectDevice(device) }
+                connectDevice(device)
+            }
         }
     }
 
@@ -170,11 +172,16 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
 
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_FINE_LOCATION)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_FINE_LOCATION
+        )
     }
 
     private fun requestBleEnable() {
@@ -194,25 +201,14 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     }
 
     private fun sendValue() {
-
-        if (bleGatt != null) {
-            for (service in bleGatt!!.services) {
-                if (service.uuid == UUID.fromString(Utils.SERIAL_SERVICE_UUID)) {
-                    for (characteristic in service.characteristics) {
-                        if (characteristic.uuid == UUID.fromString(Utils.SERIAL_RXTX_UUID)) {
-                            mCharacteristic = characteristic
-                        }
-                    }
-                }
-            }
-        }
         val txt = if (edtMsg.text.isNotEmpty()) "${edtMsg.text}\n" else null
-//        val msg = if (txt != null) Utils.bytesFromString(txt) else null
         txt?.apply {
-            mCharacteristic?.setValue(this)
-            bleGatt?.writeCharacteristic(mCharacteristic)}
-
-        edtMsg.setText("")
+            if (mCharacteristic != null && bleGatt != null) {
+                mCharacteristic!!.setValue(txt)
+                bleGatt!!.writeCharacteristic(mCharacteristic)
+            }
+            edtMsg.setText("")
+        }
     }
 
 
@@ -231,6 +227,58 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
             this.disconnect()
             this.close()
             bleGatt = null
+            mCharacteristic = null
+        }
+    }
+
+    override fun setSerialRxTxCharacteristic(characteristic: BluetoothGattCharacteristic?) {
+        mCharacteristic = characteristic
+    }
+
+    override fun connectionResult(result: Boolean) {
+        when (result) {
+            true -> {
+                Log.d(Utils.TAG, "result when true")
+                this.runOnUiThread {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.connected_to).format(bleGatt?.device?.name),
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            false -> {
+                runOnUiThread {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.connect_fail),
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    override fun writeResult(result: Boolean) {
+        when (result) {
+            true -> {
+                runOnUiThread {
+                Toast.makeText(
+                    this,
+                    getString(R.string.send_data).format(getString(R.string.success)),
+                    Toast.LENGTH_SHORT)
+                    .show()
+                }
+            }
+            false -> {
+                runOnUiThread {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.send_data).format(getString(R.string.failure)),
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
     }
 
