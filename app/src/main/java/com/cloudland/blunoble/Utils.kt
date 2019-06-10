@@ -10,11 +10,9 @@ class Utils {
         const val TAG = "something"
 
         // UUIDs built in to Bluno beetle
-        const val SERIAL_SERVICE_UUID = "0000dfb0-0000-1000-8000-00805f9b34fb"
-        const val SERIAL_RXTX_UUID = "0000dfb1-0000-1000-8000-00805f9b34fb"
-        const val SERIAL_COMMAND_UUID = "0000dfb2-0000-1000-8000-00805f9b34fb"
-        const val MODEL_NUMBER_STRING_UUID = "00002a24-0000-1000-8000-00805f9b34fb"
-
+        const val SERVICE_SERIAL_UUID = "0000dfb0-0000-1000-8000-00805f9b34fb"
+        const val CHARACTERISTIC_SERIAL_RXTX_UUID = "0000dfb1-0000-1000-8000-00805f9b34fb"
+        const val CHARACTERISTIC_SERIAL_COMMAND_UUID = "0000dfb2-0000-1000-8000-00805f9b34fb"
 
         fun bytesFromString(string: String): ByteArray {
             var byteStr = ByteArray(0)

@@ -7,30 +7,23 @@ import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.ParcelUuid
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), GattClientActionListener {
 
+    companion object {
+        val INTENT_EXTRAS_NAME = "name"
+        val INTENT_EXTRAS_ADDRESS = "address"
+    }
+
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
-    private val SCAN_PERIOD = 10000L
-    private var mScanning = false
-
-    // Simple array adapter to display advertising device names
-    private lateinit var listAdapter: ArrayAdapter<String>
-    private val deviceArray = arrayListOf<BluetoothDevice>()
 
     private var bleAdapter: BluetoothAdapter? = null
     private var bleScanner: BluetoothLeScanner? = null
@@ -38,27 +31,24 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     private var mCharacteristic: BluetoothGattCharacteristic? = null
 
     private var mConnected = false
-
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val intenta = intent
+        val name = intenta.getStringExtra(INTENT_EXTRAS_NAME)
+        val deviceAddress = intenta.getStringExtra(INTENT_EXTRAS_ADDRESS)
+        tvMainName.text = name
+        tvMainAddress.text = deviceAddress
+
         val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bleAdapter = bleManager.adapter
         bleScanner = bleAdapter?.bluetoothLeScanner
-
-        listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        lvMain.adapter = listAdapter
-
-        btnStartScan.setOnClickListener { startScan() }
-        btnStopScan.setOnClickListener { stopScan() }
-        btnStopScan.isEnabled = false
-        btnConnect.isEnabled = false
-//        btnDisconnect.isEnabled = false
-        btnDisconnect.setOnClickListener { disconnectGattServer() }
+        connectDevice(deviceAddress)
 
         btnSend.setOnClickListener { sendValue() }
+        btnDisconnect.setOnClickListener { onBackPressed() }
     }
 
     override fun onResume() {
@@ -70,93 +60,23 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
             Toast.makeText(this, "No bluetooth LE", Toast.LENGTH_SHORT).show()
             finish()
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-
-        stopScan()
+        if (!hasPermissions()) {
+            Toast.makeText(this, "Incorrect permissions", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             finish()
             return
-        } else if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-            recreate()
         }
     }
 
-    private fun startScan() {
-        if (mScanning || !hasPermissions()) {
-            Log.d(Utils.TAG, "Cannot start scan")
-            return
-        }
-
-        val uuidFilter = ScanFilter.Builder()
-            .setServiceUuid(ParcelUuid.fromString(Utils.SERIAL_SERVICE_UUID))
-            .build()
-        val filterList = ArrayList<ScanFilter>()
-        filterList.add(uuidFilter)
-
-        val settings = ScanSettings.Builder()
-            .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-            .build()
-
-        bleScanner?.startScan(filterList, settings, leScanCallback)
-        mScanning = true
-        listAdapter.clear()
-        deviceArray.clear()
-        toggleButtonStates()
-        btnConnect.isEnabled = false
-
-        // Stops scanning after a period
-        Handler().postDelayed({
-            stopScan()
-        }, SCAN_PERIOD)
-    }
-
-    private fun stopScan() {
-        if (mScanning && (bleAdapter != null) && (bleAdapter?.isEnabled == true) && (bleScanner != null)) {
-            mScanning = false
-            bleScanner?.stopScan(leScanCallback)
-            toggleButtonStates()
-            scanComplete()
-        }
-    }
-
-    private val leScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            Log.d(Utils.TAG, "${result?.device?.name}, ${result?.device?.uuids}")
-            result?.apply { processResult(this) }
-        }
-
-        override fun onScanFailed(errorCode: Int) {
-            Log.e(Utils.TAG, "Scan failed: $errorCode")
-        }
-
-        private fun processResult(result: ScanResult) {
-            result.device?.apply {
-                if (this !in deviceArray) {
-                    deviceArray.add(result.device)
-                    listAdapter.add(result.device.name)
-                    listAdapter.notifyDataSetChanged()
-                }
-            }
-        }
-    }
-
-    private fun scanComplete() {
-        if (deviceArray.isEmpty()) {
-            return
-        }
-
-        btnConnect.isEnabled = true
-        for (device: BluetoothDevice in deviceArray) {
-            btnConnect.setOnClickListener {
-                connectDevice(device)
-            }
-        }
+    override fun onBackPressed() {
+        disconnectGattServer()
+        super.onBackPressed()
     }
 
     private fun hasPermissions(): Boolean {
@@ -189,14 +109,10 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
     }
 
-    private fun toggleButtonStates() {
-        btnStartScan.isEnabled = !btnStartScan.isEnabled
-        btnStopScan.isEnabled = !btnStopScan.isEnabled
-    }
-
-    private fun connectDevice(device: BluetoothDevice) {
+    private fun connectDevice(address: String) {
         if (hasPermissions()) {
-            bleGatt = device.connectGatt(this, false, GattClientCallback(this))
+            val device = bleAdapter?.getRemoteDevice(address)
+            bleGatt = device?.connectGatt(this, false, GattClientCallback(this))
         }
     }
 
@@ -217,7 +133,6 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun setConnected() {
         Log.d(Utils.TAG, "main setconnected $bleGatt")
         mConnected = true
-        btnConnect.isEnabled = !mConnected
     }
 
     override fun disconnectGattServer() {
@@ -254,12 +169,14 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
                         getString(R.string.connect_fail),
                         Toast.LENGTH_SHORT)
                         .show()
+                    onBackPressed()
                 }
+
             }
         }
     }
 
-    override fun writeResult(result: Boolean) {
+    override fun writeSuccess(result: Boolean) {
         when (result) {
             true -> {
                 runOnUiThread {
