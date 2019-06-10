@@ -5,7 +5,7 @@ import android.content.Context
 
 interface GattClientActionListener {
 
-    fun setConnected()
+//    fun setConnected()
 
     fun disconnectGattServer()
 

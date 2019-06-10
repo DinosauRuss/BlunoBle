@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     private var mCharacteristic: BluetoothGattCharacteristic? = null
 
     private var mConnected = false
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -130,11 +131,6 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
 
     // ----- Gatt action Listener -----
 
-    override fun setConnected() {
-        Log.d(Utils.TAG, "main setconnected $bleGatt")
-        mConnected = true
-    }
-
     override fun disconnectGattServer() {
         Log.d(Utils.TAG, "main disconnectGatt")
         mConnected = false
@@ -154,7 +150,9 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         when (result) {
             true -> {
                 Log.d(Utils.TAG, "result when true")
+                mConnected = true
                 this.runOnUiThread {
+                    progressMain.visibility = View.GONE
                     Toast.makeText(
                         this,
                         getString(R.string.connected_to).format(bleGatt?.device?.name),
