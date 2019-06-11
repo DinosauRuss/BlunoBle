@@ -19,7 +19,6 @@ class GattClientCallback(private val mClientActionListener: GattClientActionList
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             Log.d(Utils.TAG, "gatt: $gatt")
             gatt.discoverServices()
-//            mClientActionListener.setConnected()
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             mClientActionListener.disconnectGattServer()
         }
@@ -30,6 +29,7 @@ class GattClientCallback(private val mClientActionListener: GattClientActionList
 
         if (status != BluetoothGatt.GATT_SUCCESS) {
             Log.d(Utils.TAG, "Connect fail")
+            mClientActionListener.disconnectGattServer()
             return
         }
 

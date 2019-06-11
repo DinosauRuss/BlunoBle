@@ -13,4 +13,6 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+    <string name="click_item">Click item to connect</string>
+    <string name="no_devices_found">No devices found</string>
 </resources>

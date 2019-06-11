@@ -19,19 +19,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), GattClientActionListener {
 
     companion object {
-        val INTENT_EXTRAS_NAME = "name"
-        val INTENT_EXTRAS_ADDRESS = "address"
+        const val INTENT_EXTRAS_NAME = "name"
+        const val INTENT_EXTRAS_ADDRESS = "address"
+
+        private var bleAdapter: BluetoothAdapter? = null
+        private var bleScanner: BluetoothLeScanner? = null
+        private var bleGatt: BluetoothGatt? = null
+        private var mCharacteristic: BluetoothGattCharacteristic? = null
+
+        private var mConnected = false
     }
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
 
-    private var bleAdapter: BluetoothAdapter? = null
-    private var bleScanner: BluetoothLeScanner? = null
-    private var bleGatt: BluetoothGatt? = null
-    private var mCharacteristic: BluetoothGattCharacteristic? = null
-
-    private var mConnected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +44,14 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         tvMainName.text = name
         tvMainAddress.text = deviceAddress
 
-        val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bleAdapter = bleManager.adapter
-        bleScanner = bleAdapter?.bluetoothLeScanner
-        connectDevice(deviceAddress)
+        if (!mConnected) {
+            val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            bleAdapter = bleManager.adapter
+            bleScanner = bleAdapter?.bluetoothLeScanner
+            connectDevice(deviceAddress)
+        } else {
+            progressMain.visibility = View.GONE
+        }
 
         btnSend.setOnClickListener { sendValue() }
         btnDisconnect.setOnClickListener { onBackPressed() }
@@ -121,7 +126,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         val txt = if (edtMsg.text.isNotEmpty()) "${edtMsg.text}\n" else null
         txt?.apply {
             if (mCharacteristic != null && bleGatt != null) {
-                mCharacteristic!!.setValue(txt)
+                mCharacteristic!!.setValue(this)
                 bleGatt!!.writeCharacteristic(mCharacteristic)
             }
             edtMsg.setText("")
@@ -134,6 +139,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun disconnectGattServer() {
         Log.d(Utils.TAG, "main disconnectGatt")
         mConnected = false
+        Toast.makeText(this, "Device disconnected", Toast.LENGTH_SHORT).show()
         bleGatt?.apply {
             this.disconnect()
             this.close()
@@ -149,23 +155,26 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun connectionResult(result: Boolean) {
         when (result) {
             true -> {
-                Log.d(Utils.TAG, "result when true")
+                Log.d(Utils.TAG, "connection true")
                 mConnected = true
                 this.runOnUiThread {
                     progressMain.visibility = View.GONE
                     Toast.makeText(
                         this,
                         getString(R.string.connected_to).format(bleGatt?.device?.name),
-                        Toast.LENGTH_SHORT)
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             }
             false -> {
+                mConnected = false
                 runOnUiThread {
                     Toast.makeText(
                         this,
                         getString(R.string.connect_fail),
-                        Toast.LENGTH_SHORT)
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     onBackPressed()
                 }
@@ -178,11 +187,12 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         when (result) {
             true -> {
                 runOnUiThread {
-                Toast.makeText(
-                    this,
-                    getString(R.string.send_data).format(getString(R.string.success)),
-                    Toast.LENGTH_SHORT)
-                    .show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.send_data).format(getString(R.string.success)),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
             }
             false -> {
@@ -190,7 +200,8 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
                     Toast.makeText(
                         this,
                         getString(R.string.send_data).format(getString(R.string.failure)),
-                        Toast.LENGTH_SHORT)
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             }

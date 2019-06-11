@@ -62,10 +62,22 @@ class DeviceScanActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        // Initializes list view adapter.
+        // Initialize list view adapter.
         mListAdapter = LeDeviceListAdapter()
         foundDevicesList.adapter = mListAdapter
+
+        tvScanInstr.visibility = View.INVISIBLE
     }
+
+    override fun onStop() {
+        super.onStop()
+
+        bleScanner?.stopScan(leScanCallback)
+        mHandler.removeCallbacksAndMessages(null)
+        Log.d(Utils.TAG, "onStop")
+    }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -97,9 +109,13 @@ class DeviceScanActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            finish()
-            return
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+                finish()
+                return
+            } else if (resultCode == Activity.RESULT_OK) {
+                recreate()
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -138,6 +154,7 @@ class DeviceScanActivity : AppCompatActivity() {
         mScanning = true
         mListAdapter?.clear()
         invalidateOptionsMenu()
+        tvScanInstr.visibility = View.INVISIBLE
 
         // Stops scanning after a period
         mHandler.postDelayed({
@@ -150,8 +167,18 @@ class DeviceScanActivity : AppCompatActivity() {
             bleScanner?.stopScan(leScanCallback)
             mScanning = false
             invalidateOptionsMenu()
-
         }
+
+        mListAdapter?.also {
+            if (it.count > 0) {
+                tvScanInstr.visibility = View.VISIBLE
+            }
+            else {
+                Toast.makeText(this, getString(R.string.no_devices_found), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        mHandler.removeCallbacksAndMessages(null)
     }
 
 
