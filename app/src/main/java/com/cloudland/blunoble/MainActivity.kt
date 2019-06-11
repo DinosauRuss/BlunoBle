@@ -8,6 +8,7 @@ import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -64,12 +65,12 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         // Verify phone is BLE capable
         // Also set in the manifest
         packageManager.takeIf { !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) }?.also {
-            Toast.makeText(this, "No bluetooth LE", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_ble), Toast.LENGTH_SHORT).show()
             finish()
         }
 
         if (!hasPermissions()) {
-            Toast.makeText(this, "Incorrect permissions", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.incorrect_permissions), Toast.LENGTH_SHORT).show()
             finish()
         }
     }
@@ -83,19 +84,21 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
 
     override fun onBackPressed() {
         if (mConnected) {
-            // Show alert dialog
             val alertDialog = AlertDialog.Builder(this)
-                .setTitle("Alert!")
-                .setMessage("Disconnect from \"%s\"?".format(bleGatt?.device?.name))
-                .setNegativeButton("No") { dialog, id ->
+                .setTitle( "${getString(R.string.alert)}!" )
+                .setMessage(getString(R.string.disconnect_from).format(bleGatt?.device?.name))
+                .setNegativeButton(getString(R.string.no)) { dialog, id ->
                     dialog.dismiss()
                 }
-                .setPositiveButton("Yes") { dialog, id ->
+                .setPositiveButton(getString(R.string.yes)) { dialog, id ->
                     dialog.dismiss()
                     disconnectGattServer()
                     super.onBackPressed()
                 }
                 .show()
+                val btnColor = ContextCompat.getColor(this, android.R.color.black)
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(btnColor)
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(btnColor)
         }
     }
 
@@ -153,7 +156,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun disconnectGattServer() {
         Log.d(Utils.TAG, "main disconnectGatt")
         mConnected = false
-        Toast.makeText(this, "Device disconnected", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.device_disconnected), Toast.LENGTH_SHORT).show()
         bleGatt?.apply {
             this.disconnect()
             this.close()

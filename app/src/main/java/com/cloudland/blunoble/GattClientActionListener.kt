@@ -1,11 +1,8 @@
 package com.cloudland.blunoble
 
 import android.bluetooth.BluetoothGattCharacteristic
-import android.content.Context
 
 interface GattClientActionListener {
-
-//    fun setConnected()
 
     fun disconnectGattServer()
 

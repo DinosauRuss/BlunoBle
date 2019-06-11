@@ -72,9 +72,9 @@ class DeviceScanActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        bleScanner?.stopScan(leScanCallback)
+        stopScan()
         mHandler.removeCallbacksAndMessages(null)
-        Log.d(Utils.TAG, "onStop")
+        Log.d(Utils.TAG, "onStop, $mScanning")
     }
 
 
@@ -140,6 +140,7 @@ class DeviceScanActivity : AppCompatActivity() {
             return
         }
 
+        mScanning = true
         val uuidFilter = ScanFilter.Builder()
             .setServiceUuid(ParcelUuid.fromString(Utils.SERVICE_SERIAL_UUID))
             .build()
@@ -151,7 +152,6 @@ class DeviceScanActivity : AppCompatActivity() {
             .build()
 
         bleScanner?.startScan(filterList, settings, leScanCallback)
-        mScanning = true
         mListAdapter?.clear()
         invalidateOptionsMenu()
         tvScanInstr.visibility = View.INVISIBLE
@@ -163,10 +163,12 @@ class DeviceScanActivity : AppCompatActivity() {
     }
 
     private fun stopScan() {
+        Log.d(Utils.TAG, "stopScan, $mScanning")
         if (mScanning) {
             bleScanner?.stopScan(leScanCallback)
             mScanning = false
             invalidateOptionsMenu()
+            mHandler.removeCallbacksAndMessages(null)
         }
 
         mListAdapter?.also {
@@ -256,7 +258,7 @@ class DeviceScanActivity : AppCompatActivity() {
             val inflato = layoutInflater
 
             if (convertView == null) {
-                view = inflato.inflate(R.layout.list_item_device, null)
+                view = inflato.inflate(R.layout.list_item_device, parent, false)
                 viewHolder = ViewHolder()
                 viewHolder.tvName = view.findViewById(R.id.tvListName)
                 viewHolder.tvAddress = view.findViewById(R.id.tvListAddress)

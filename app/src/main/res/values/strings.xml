@@ -1,21 +1,31 @@
 <resources>
-    <string name="app_name">App Title</string>
+    <string name="app_name">Bluno Ble</string>
 
+    <string name="no_ble">No Bluetooth LE</string>
+    <string name="incorrect_permissions">Incorrect permissions</string>
+    <string name="cannot_scan">Cannot start scan</string>
     <string name="connected_to">Connected to %s</string>
     <string name="connect_fail">Connection failure</string>
+    <string name="unknown_device">Unknown Device</string>
+
     <string name="send_data">Send data %s</string>
     <string name="success">success</string>
     <string name="failure">failure</string>
-    <string name="unknown_device">Unknown Device</string>
-    <string name="no_ble">No Bluetooth LE</string>
-    <string name="cannot_scan">Cannot start scan</string>
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+
     <string name="click_item">Click item to connect</string>
     <string name="no_devices_found">No devices found</string>
+
     <string name="command">Command</string>
     <string name="send">Send</string>
     <string name="unlink">Unlink</string>
+
+    <string name="alert">Alert</string>
+    <string name="disconnect_from">Disconnect from \"%s\"?</string>
+    <string name="device_disconnected">Device disconnected</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>
