@@ -169,14 +169,13 @@ class DeviceScanActivity : AppCompatActivity() {
             mScanning = false
             invalidateOptionsMenu()
             mHandler.removeCallbacksAndMessages(null)
-        }
 
-        mListAdapter?.also {
-            if (it.count > 0) {
-                tvScanInstr.visibility = View.VISIBLE
-            }
-            else {
-                Toast.makeText(this, getString(R.string.no_devices_found), Toast.LENGTH_SHORT).show()
+            mListAdapter?.also {
+                if (it.count > 0) {
+                    tvScanInstr.visibility = View.VISIBLE
+                } else {
+                    Toast.makeText(this, getString(R.string.no_devices_found), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
