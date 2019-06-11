@@ -2,6 +2,7 @@ package com.cloudland.blunoble
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.bluetooth.*
 import android.bluetooth.le.*
 import android.content.Context
@@ -81,8 +82,21 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     }
 
     override fun onBackPressed() {
-        disconnectGattServer()
-        super.onBackPressed()
+        if (mConnected) {
+            // Show alert dialog
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle("Alert!")
+                .setMessage("Disconnect from \"%s\"?".format(bleGatt?.device?.name))
+                .setNegativeButton("No") { dialog, id ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton("Yes") { dialog, id ->
+                    dialog.dismiss()
+                    disconnectGattServer()
+                    super.onBackPressed()
+                }
+                .show()
+        }
     }
 
     private fun hasPermissions(): Boolean {

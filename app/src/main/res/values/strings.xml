@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BlunoBle</string>
+    <string name="app_name">App Title</string>
 
     <string name="connected_to">Connected to %s</string>
     <string name="connect_fail">Connection failure</string>
@@ -15,4 +15,7 @@
     <string name="menu_stop">Stop</string>
     <string name="click_item">Click item to connect</string>
     <string name="no_devices_found">No devices found</string>
+    <string name="command">Command</string>
+    <string name="send">Send</string>
+    <string name="unlink">Unlink</string>
 </resources>

@@ -4,7 +4,7 @@ import android.bluetooth.*
 import android.util.Log
 import java.util.*
 
-class GattClientCallback(private val mClientActionListener: GattClientActionListener) : BluetoothGattCallback() {
+class GattClientCallback( private val mClientActionListener: GattClientActionListener) : BluetoothGattCallback() {
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
@@ -55,5 +55,7 @@ class GattClientCallback(private val mClientActionListener: GattClientActionList
             mClientActionListener.disconnectGattServer()
         }
     }
+
+
 
 }
