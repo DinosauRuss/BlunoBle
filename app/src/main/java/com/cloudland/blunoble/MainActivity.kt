@@ -64,12 +64,12 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
         // Verify phone is BLE capable
         // Also set in the manifest
         packageManager.takeIf { !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) }?.also {
-            Toast.makeText(this, getString(R.string.no_ble), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_no_ble), Toast.LENGTH_SHORT).show()
             finish()
         }
 
         if (!hasPermissions()) {
-            Toast.makeText(this, getString(R.string.incorrect_permissions), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_incorrect_permissions), Toast.LENGTH_SHORT).show()
             finish()
         }
     }
@@ -84,12 +84,12 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun onBackPressed() {
         if (mConnected) {
             val alertDialog = AlertDialog.Builder(this)
-                .setTitle( "${getString(R.string.alert)}!" )
-                .setMessage(getString(R.string.disconnect_from).format(bleGatt?.device?.name))
-                .setNegativeButton(getString(R.string.no)) { dialog, id ->
+                .setTitle( "${getString(R.string.alert_title)}!" )
+                .setMessage(getString(R.string.alert_message).format(bleGatt?.device?.name))
+                .setNegativeButton(getString(R.string.alert_btn_negative)) { dialog, id ->
                     dialog.dismiss()
                 }
-                .setPositiveButton(getString(R.string.yes)) { dialog, id ->
+                .setPositiveButton(getString(R.string.alert_btn_positive)) { dialog, id ->
                     dialog.dismiss()
                     disconnectGattServer()
                     super.onBackPressed()
@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun disconnectGattServer() {
         Log.d(Utils.TAG, "main disconnectGatt")
         mConnected = false
-        Toast.makeText(this, getString(R.string.device_disconnected), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toast_device_disconnected), Toast.LENGTH_SHORT).show()
         bleGatt?.apply {
             this.disconnect()
             this.close()
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
                     progressMain.visibility = View.GONE
                     Toast.makeText(
                         this,
-                        getString(R.string.connected_to).format(bleGatt?.device?.name),
+                        getString(R.string.toast_connected_to).format(bleGatt?.device?.name),
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
                 runOnUiThread {
                     Toast.makeText(
                         this,
-                        getString(R.string.connect_fail),
+                        getString(R.string.toast_connect_fail),
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
                 runOnUiThread {
                     Toast.makeText(
                         this,
-                        getString(R.string.send_data).format(getString(R.string.success)),
+                        getString(R.string.toast_send_data).format(getString(R.string.toast_success)),
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
                 runOnUiThread {
                     Toast.makeText(
                         this,
-                        getString(R.string.send_data).format(getString(R.string.failure)),
+                        getString(R.string.toast_send_data).format(getString(R.string.toast_failure)),
                         Toast.LENGTH_SHORT
                     )
                         .show()

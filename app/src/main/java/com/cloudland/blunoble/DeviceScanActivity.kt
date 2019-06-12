@@ -51,7 +51,7 @@ class DeviceScanActivity : AppCompatActivity() {
         // Verify phone is BLE capable
         // Is also set in the manifest
         packageManager.takeIf { !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) }?.also {
-            Toast.makeText(this, getString(R.string.no_ble), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_no_ble), Toast.LENGTH_SHORT).show()
             finish()
         }
 
@@ -144,7 +144,7 @@ class DeviceScanActivity : AppCompatActivity() {
 
     private fun startScan() {
         if (mScanning || !hasPermissions()) {
-            Log.d(Utils.TAG, getString(R.string.cannot_scan))
+            Log.d(Utils.TAG, "Cannot scan")
             return
         }
 
@@ -182,7 +182,7 @@ class DeviceScanActivity : AppCompatActivity() {
                 if (it.count > 0) {
                     tvScanInstr.visibility = View.VISIBLE
                 } else {
-                    Toast.makeText(this, getString(R.string.no_devices_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.toast_no_devices_found), Toast.LENGTH_SHORT).show()
                 }
             }
         }

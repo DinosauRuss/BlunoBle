@@ -1,0 +1,27 @@
+<resources>
+    <string name="unknown_device">Dispositivo desconocido</string>
+    <string name="click_item">Haga clic en el elemento para conectarse</string>
+
+    <string name="toast_no_ble">No Bluetooth LE</string>
+    <string name="toast_incorrect_permissions">Permisos incorrectos</string>
+    <string name="toast_connected_to">Conectado a %s</string>
+    <string name="toast_connect_fail">Fallo de conexión</string>
+    <string name="toast_send_data">Enviar datos %s</string>
+    <string name="toast_success">triumph</string>
+    <string name="toast_failure">fracaso</string>
+    <string name="toast_no_devices_found">No se encontraron dispositivos</string>
+    <string name="toast_device_disconnected">Dispositivo desconectado</string>
+
+    <string name="menu_refresh">Refrescar</string>
+    <string name="menu_scan">escanear</string>
+    <string name="menu_stop">Detener</string>
+
+    <string name="edt_hint_command">Ingresar Comando</string>
+    <string name="btn_send">Enviar</string>
+    <string name="btn_unlink">Desconectar</string>
+
+    <string name="alert_title">Alerta</string>
+    <string name="alert_message">Desconectarse de \"%s\"?</string>
+    <string name="alert_btn_negative">No</string>
+    <string name="alert_btn_positive">Sí</string>
+</resources>
