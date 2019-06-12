@@ -30,7 +30,6 @@
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_margin">4dp</item>
-
     </style>
 
 </resources>
