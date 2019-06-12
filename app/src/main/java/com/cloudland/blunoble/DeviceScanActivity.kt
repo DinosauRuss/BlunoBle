@@ -28,6 +28,10 @@ import kotlinx.android.synthetic.main.activity_device_scan.*
 
 class DeviceScanActivity : AppCompatActivity() {
 
+    companion object {
+        private var returnFromResult = false
+    }
+
     private val mHandler: Handler = Handler()
     private var bleAdapter: BluetoothAdapter? = null
     private var bleScanner: BluetoothLeScanner? = null
@@ -54,6 +58,11 @@ class DeviceScanActivity : AppCompatActivity() {
         val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bleAdapter = bleManager.adapter
         bleScanner = bleAdapter?.bluetoothLeScanner
+
+        if (returnFromResult) {
+            startScan()
+            returnFromResult = false
+        }
 
         foundDevicesList.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, position: Int, id: Long ->
             listItemClick(position) }
@@ -98,7 +107,6 @@ class DeviceScanActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_scan -> {
-                mListAdapter?.clear()
                 startScan()
             }
             R.id.menu_stop -> {
@@ -114,6 +122,7 @@ class DeviceScanActivity : AppCompatActivity() {
                 finish()
                 return
             } else if (resultCode == Activity.RESULT_OK) {
+                returnFromResult = true
                 recreate()
             }
         }
