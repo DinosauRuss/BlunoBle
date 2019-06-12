@@ -19,7 +19,7 @@
     <string name="click_item">Click item to connect</string>
     <string name="no_devices_found">No devices found</string>
 
-    <string name="command">Command</string>
+    <string name="command">Enter Command</string>
     <string name="send">Send</string>
     <string name="unlink">Unlink</string>
 
@@ -28,4 +28,8 @@
     <string name="device_disconnected">Device disconnected</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="device_name">Device Name</string>
+    <string name="device_address">Device address</string>
+    <string name="bluetooth_device_name">Bluetooth device name</string>
+    <string name="bluetooth_device_address">Bluetooth device address</string>
 </resources>

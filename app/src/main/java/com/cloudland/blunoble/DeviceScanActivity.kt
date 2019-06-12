@@ -225,7 +225,7 @@ class DeviceScanActivity : AppCompatActivity() {
 
     private val leScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            Log.d(Utils.TAG, "${result?.device?.name}, ${result?.device?.uuids}")
+            Log.d(Utils.TAG, "${result?.device}, ${result?.device?.name}")
             result?.apply { processResult(this) }
         }
 
@@ -236,7 +236,6 @@ class DeviceScanActivity : AppCompatActivity() {
         private fun processResult(result: ScanResult) {
             result.device?.apply {
                 mListAdapter?.addDevice(this)
-                mListAdapter?.notifyDataSetChanged()
             }
         }
     }
@@ -249,6 +248,7 @@ class DeviceScanActivity : AppCompatActivity() {
         fun addDevice(device: BluetoothDevice) {
             if (!deviceArray.contains(device)) {
                 deviceArray.add(device)
+                notifyDataSetChanged()
             }
         }
 
@@ -258,6 +258,7 @@ class DeviceScanActivity : AppCompatActivity() {
 
         fun clear() {
             deviceArray.clear()
+            notifyDataSetChanged()
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
