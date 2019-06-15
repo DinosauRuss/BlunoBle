@@ -36,15 +36,9 @@ class CommandFragment : Fragment() {
         arguments?.let {
             deviceName = it.getString(PARAM_NAME)
             deviceAddr = it.getString(PARAM_ADDRESS)
-
             Log.d(Utils.TAG, "command frag created")
         }
 
-//        listener?.apply {
-//            if (checkConnected()) {
-//                progressFragCommand.visibility = View.GONE
-//            }
-//        }
         listener?.takeIf { it.checkConnected() }?.apply {
             progressFragCommand.visibility = View.GONE
             Log.d(Utils.TAG, "takeIf")
@@ -55,21 +49,17 @@ class CommandFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_command, container, false)
-
-//        btnDisconnectFragCommand.setOnClickListener { listener?.unlinkBleDevice() }
-//        btnSendFragCommand.setOnClickListener { listener?.sendCommand(getTextFromEdt()) }
-
-        return view
+        return inflater.inflate(R.layout.fragment_command, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnDisconnectFragCommand.setOnClickListener { listener?.unlinkBleDevice() }
+//        btnDisconnectFragCommand.setOnClickListener { listener?.unlinkBleDevice() }
         btnSendFragCommand.setOnClickListener { listener?.sendCommand(getTextFromEdt()) }
-        tvNameFragCommand.text = deviceName
-        tvAddressFragCommand.text = deviceAddr
+
+//        tvNameFragCommand.text = deviceName
+//        tvAddressFragCommand.text = deviceAddr
     }
 
     override fun onAttach(context: Context) {

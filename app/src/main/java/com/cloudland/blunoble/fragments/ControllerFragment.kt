@@ -10,6 +10,7 @@ import android.view.ViewGroup
 
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.utils.Utils
+import kotlinx.android.synthetic.main.fragment_controller.*
 
 private const val PARAM_NAME = "NAME"
 private const val PARAM_ADDRESS = "address"
@@ -40,11 +41,6 @@ class ControllerFragment : Fragment() {
             Log.d(Utils.TAG, "controller frag created")
         }
 
-//        listener?.apply {
-//            if (checkConnected()) {
-//                progressFragCommand.visibility = View.GONE
-//            }
-//        }
         listener?.takeIf { it.checkConnected() }?.apply {
             Log.d(Utils.TAG, "takeIf")
         }
@@ -55,9 +51,16 @@ class ControllerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_controller, container, false)
+        return inflater.inflate(R.layout.fragment_controller, container, false)
+    }
 
-        return view
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+//        btnDisconnectFragController.setOnClickListener { listener?.unlinkBleDevice() }
+//        deviceName?.also { tvNameFragController.text = it}
+//        deviceAddr?.also { tvAddressFragController.text = it }
+
     }
 
     override fun onAttach(context: Context) {

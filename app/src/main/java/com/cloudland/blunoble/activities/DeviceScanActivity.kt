@@ -91,12 +91,10 @@ class DeviceScanActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu?.findItem(R.id.menu_refresh)?.setActionView(R.layout.action_progress)
         if (!mScanning) {
-//            menu?.findItem(R.id.menu_refresh)?.actionView = null
             menu?.findItem(R.id.menu_refresh)?.isVisible = false
             menu?.findItem(R.id.menu_scan)?.isVisible = true
             menu?.findItem(R.id.menu_stop)?.isVisible = false
         } else {
-//            menu?.findItem(R.id.menu_refresh)?.setActionView(R.layout.action_progress)
             menu?.findItem(R.id.menu_refresh)?.isVisible = true
             menu?.findItem(R.id.menu_scan)?.isVisible = false
             menu?.findItem(R.id.menu_stop)?.isVisible = true

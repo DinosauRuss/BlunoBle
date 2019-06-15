@@ -49,7 +49,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         setContentView(R.layout.activity_pager)
 
         val intenta = intent
-        val name = intenta.getStringExtra(INTENT_EXTRAS_NAME)
+        val deviceName = intenta.getStringExtra(INTENT_EXTRAS_NAME)
         val deviceAddress = intenta.getStringExtra(INTENT_EXTRAS_ADDRESS)
 
         if (!mConnected) {
@@ -59,9 +59,13 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
             connectDevice(deviceAddress)
         }
 
-        val vpAdapter = ViewPagerAdapter(name, deviceAddress, supportFragmentManager)
+        val vpAdapter = ViewPagerAdapter(deviceName, deviceAddress, supportFragmentManager)
         viewPager.adapter = vpAdapter
         tabLayout.setupWithViewPager(viewPager)
+
+        tvNamePagerActivity.text = deviceName
+        tvAddressPagerActivity.text = deviceAddress
+        btnDisconnectPagerActivity.setOnClickListener { unlinkBleDevice() }
     }
 
     override fun onResume() {

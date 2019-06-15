@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Arduino Ble</string>
 
     <string name="unknown_device">Unknown Device</string>
-    <string name="click_item">Click item to connect</string>
+    <string name="click_item">Tap item to connect</string>
 
     <string name="toast_no_ble">No Bluetooth LE</string>
     <string name="toast_incorrect_permissions">Incorrect permissions</string>
