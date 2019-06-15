@@ -1,4 +1,4 @@
-package com.cloudland.blunoble
+package com.cloudland.blunoble.activities
 
 import android.Manifest
 import android.app.Activity
@@ -24,6 +24,8 @@ import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
+import com.cloudland.blunoble.R
+import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_device_scan.*
 
 class DeviceScanActivity : AppCompatActivity() {
@@ -83,7 +85,6 @@ class DeviceScanActivity : AppCompatActivity() {
 
         stopScan()
         mHandler.removeCallbacksAndMessages(null)
-        Log.d(Utils.TAG, "onStop, $mScanning")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -135,7 +136,8 @@ class DeviceScanActivity : AppCompatActivity() {
 
         val device: BluetoothDevice? = mListAdapter?.getDevice(position)
         device?.also {
-            val intento = Intent(this, MainActivity::class.java)
+//            val intento = Intent(this, MainActivity::class.java)
+            val intento = Intent(this, PagerActivity::class.java)
             intento.putExtra(MainActivity.INTENT_EXTRAS_NAME, device.name)
             intento.putExtra(MainActivity.INTENT_EXTRAS_ADDRESS, device.address)
             startActivity(intento)
@@ -171,7 +173,6 @@ class DeviceScanActivity : AppCompatActivity() {
     }
 
     private fun stopScan() {
-        Log.d(Utils.TAG, "stopScan, $mScanning")
         if (mScanning) {
             bleScanner?.stopScan(leScanCallback)
             mScanning = false

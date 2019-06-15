@@ -26,7 +26,7 @@
         <item name="android:shadowRadius">0.2</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@drawable/btn</item>
+        <item name="android:background">@drawable/btn_custom</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_margin">4dp</item>

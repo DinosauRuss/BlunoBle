@@ -1,4 +1,4 @@
-package com.cloudland.blunoble
+package com.cloudland.blunoble.utils
 
 import android.bluetooth.*
 import android.util.Log

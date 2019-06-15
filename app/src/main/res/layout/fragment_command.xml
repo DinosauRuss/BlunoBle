@@ -5,11 +5,10 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    tools:context=".activities.MainActivity">
+    android:focusableInTouchMode="true">
 
     <ProgressBar
-        android:id="@+id/progressMain"
+        android:id="@+id/progressFragCommand"
         android:layout_width="200dp"
         android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,21 +27,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tvMainName"
+            android:id="@+id/tvNameFragCommand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
             tools:text="Device name" />
 
         <TextView
-            android:id="@+id/tvMainAddress"
+            android:id="@+id/tvAddressFragCommand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             tools:text="address" />
 
         <Button
-            android:id="@+id/btnDisconnect"
+            android:id="@+id/btnDisconnectFragCommand"
             style="@style/myButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +51,7 @@
 
 
     <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/llMsg"
+        android:id="@+id/llMsgFragCommand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -63,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/edtMsg"
+            android:id="@+id/edtMsgFragCommand"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
@@ -75,7 +74,7 @@
             tools:ignore="Autofill" />
 
         <Button
-            android:id="@+id/btnSend"
+            android:id="@+id/btnSendFragCommand"
             style="@style/myButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

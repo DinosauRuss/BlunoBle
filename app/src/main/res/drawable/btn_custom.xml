@@ -3,10 +3,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_enabled="false"
-        android:drawable="@drawable/btn_disabled" />
+        android:drawable="@drawable/btn_custom_disabled" />
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/btn_pressed" />
+        android:drawable="@drawable/btn_custom_pressed" />
     <item
-        android:drawable="@drawable/btn_bg" />
+        android:drawable="@drawable/btn_custom_bg" />
 </selector>

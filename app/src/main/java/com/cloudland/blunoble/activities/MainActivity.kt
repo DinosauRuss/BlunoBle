@@ -1,4 +1,4 @@
-package com.cloudland.blunoble
+package com.cloudland.blunoble.activities
 
 import android.Manifest
 import android.app.Activity
@@ -15,6 +15,11 @@ import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.cloudland.blunoble.utils.GattClientCallback
+import com.cloudland.blunoble.R
+import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
+import com.cloudland.blunoble.utils.Utils
+import com.cloudland.blunoble.utils.GattClientActionListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), GattClientActionListener {
@@ -54,7 +59,8 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
             progressMain.visibility = View.GONE
         }
 
-        btnSend.setOnClickListener { sendValue() }
+//        btnSend.setOnClickListener { sendValueToDevice() }
+        btnSend.setOnClickListener { sendValueToDevice(getTextFromEdt()) }
         btnDisconnect.setOnClickListener { onBackPressed() }
     }
 
@@ -134,19 +140,37 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     private fun connectDevice(address: String) {
         if (hasPermissions()) {
             val device = bleAdapter?.getRemoteDevice(address)
-            bleGatt = device?.connectGatt(this, false, GattClientCallback(this))
+            bleGatt = device?.connectGatt(this, false,
+                GattClientCallback(this)
+            )
         }
     }
 
-    private fun sendValue() {
-        val txt = if (edtMsg.text.isNotEmpty()) "${edtMsg.text}\n" else null
-        txt?.apply {
+//    private fun sendValueToDevice() {
+//        val txt = if (edtMsg.text.isNotEmpty()) "${edtMsg.text}\n" else null
+//        txt?.apply {
+//            if (mCharacteristic != null && bleGatt != null) {
+//                mCharacteristic!!.setValue(this)
+//                bleGatt!!.writeCharacteristic(mCharacteristic)
+//            }
+//            edtMsg.setText("")
+//        }
+//    }
+
+    private fun sendValueToDevice(message: String?) {
+        message?.apply {
             if (mCharacteristic != null && bleGatt != null) {
                 mCharacteristic!!.setValue(this)
                 bleGatt!!.writeCharacteristic(mCharacteristic)
             }
-            edtMsg.setText("")
         }
+    }
+
+    private fun getTextFromEdt(): String? {
+        val msg =  if (edtMsg.text.isNotEmpty()) "${edtMsg.text}\n" else null
+        msg?.apply { edtMsg.setText("") }
+
+        return msg
     }
 
 

@@ -19,8 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".DeviceScanActivity">
+        <activity android:name=".activities.PagerActivity"></activity>
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.DeviceScanActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
