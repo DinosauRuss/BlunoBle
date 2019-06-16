@@ -4,42 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.fragment_controller.*
-
-private const val PARAM_NAME = "NAME"
-private const val PARAM_ADDRESS = "address"
 
 class ControllerFragment : Fragment() {
 
-    companion object {
-        @JvmStatic
-        fun newInstance(name: String, address: String) =
-            ControllerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(PARAM_NAME, name)
-                    putString(PARAM_ADDRESS, address)
-                }
-            }
-    }
-
-    private var deviceName: String? = null
-    private var deviceAddr: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            deviceName = it.getString(PARAM_NAME)
-            deviceAddr = it.getString(PARAM_ADDRESS)
-        }
     }
 
     override fun onCreateView(

@@ -20,8 +20,8 @@
     <string name="btn_send">Envoyer</string>
     <string name="btn_unlink">Dissocier</string>
 
-    <string name="alert_title">Alerte</string>
-    <string name="alert_message">Déconnecter de \"%s\"?</string>
-    <string name="alert_btn_negative">Non</string>
-    <string name="alert_btn_positive">Oui</string>
+    <string name="alert_disconnect_title">Alerte</string>
+    <string name="alert_disconnect_message">Déconnecter de \"%s\"?</string>
+    <string name="alert_btn_no">Non</string>
+    <string name="alert_btn_yes">Oui</string>
 </resources>

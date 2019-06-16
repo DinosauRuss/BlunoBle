@@ -39,6 +39,8 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         private var mCharacteristic: BluetoothGattCharacteristic? = null
 
         private var mConnected = false
+
+        private var DEVICE_ADDR: String? = null
     }
 
     private val REQUEST_ENABLE_BT = 1
@@ -51,6 +53,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         val intenta = intent
         val deviceName = intenta.getStringExtra(INTENT_EXTRAS_NAME)
         val deviceAddress = intenta.getStringExtra(INTENT_EXTRAS_ADDRESS)
+        DEVICE_ADDR = deviceAddress
 
         if (!mConnected) {
             val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -94,12 +97,12 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
     override fun onBackPressed() {
         if (mConnected) {
             val alertDialog = AlertDialog.Builder(this)
-                .setTitle( "${getString(R.string.alert_title)}!" )
-                .setMessage(getString(R.string.alert_message).format(bleGatt?.device?.name))
-                .setNegativeButton(getString(R.string.alert_btn_negative)) { dialog, id ->
+                .setTitle( "${getString(R.string.alert_disconnect_title)}!" )
+                .setMessage(getString(R.string.alert_disconnect_message).format(bleGatt?.device?.name))
+                .setNegativeButton(getString(R.string.alert_btn_no)) { dialog, id ->
                     dialog.dismiss()
                 }
-                .setPositiveButton(getString(R.string.alert_btn_positive)) { dialog, id ->
+                .setPositiveButton(getString(R.string.alert_btn_yes)) { dialog, id ->
                     dialog.dismiss()
                     disconnectGattServer()
                     super.onBackPressed()
@@ -152,7 +155,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
 
     private fun sendValueToDevice(message: String?) {
         message?.apply {
-            if (mCharacteristic != null && bleGatt != null) {
+            if (mCharacteristic != null && bleGatt != null && mConnected) {
                 mCharacteristic!!.setValue(this)
                 bleGatt!!.writeCharacteristic(mCharacteristic)
             }
@@ -210,16 +213,16 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
 
     override fun writeSuccess(result: Boolean) {
         when (result) {
-            true -> {
-                runOnUiThread {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.toast_send_data).format(getString(R.string.toast_success)),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }
+//            true -> {
+//                runOnUiThread {
+//                    Toast.makeText(
+//                        this,
+//                        getString(R.string.toast_send_data).format(getString(R.string.toast_success)),
+//                        Toast.LENGTH_SHORT
+//                    )
+//                        .show()
+//                }
+//            }
             false -> {
                 runOnUiThread {
                     Toast.makeText(

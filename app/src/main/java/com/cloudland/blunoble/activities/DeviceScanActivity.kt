@@ -265,7 +265,7 @@ class DeviceScanActivity : AppCompatActivity() {
             val inflato = layoutInflater
 
             if (convertView == null) {
-                view = inflato.inflate(R.layout.list_item_device, parent, false)
+                view = inflato.inflate(R.layout.list_item_device_scan, parent, false)
                 viewHolder = ViewHolder()
                 viewHolder.tvName = view.findViewById(R.id.tvListName)
                 viewHolder.tvAddress = view.findViewById(R.id.tvListAddress)

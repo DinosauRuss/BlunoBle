@@ -17,7 +17,6 @@ import android.view.View
 import android.widget.Toast
 import com.cloudland.blunoble.utils.GattClientCallback
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.GattClientActionListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -90,12 +89,12 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
     override fun onBackPressed() {
         if (mConnected) {
             val alertDialog = AlertDialog.Builder(this)
-                .setTitle( "${getString(R.string.alert_title)}!" )
-                .setMessage(getString(R.string.alert_message).format(bleGatt?.device?.name))
-                .setNegativeButton(getString(R.string.alert_btn_negative)) { dialog, id ->
+                .setTitle( "${getString(R.string.alert_disconnect_title)}!" )
+                .setMessage(getString(R.string.alert_disconnect_message).format(bleGatt?.device?.name))
+                .setNegativeButton(getString(R.string.alert_btn_no)) { dialog, id ->
                     dialog.dismiss()
                 }
-                .setPositiveButton(getString(R.string.alert_btn_positive)) { dialog, id ->
+                .setPositiveButton(getString(R.string.alert_btn_yes)) { dialog, id ->
                     dialog.dismiss()
                     disconnectGattServer()
                     super.onBackPressed()
@@ -153,7 +152,7 @@ class MainActivity : AppCompatActivity(), GattClientActionListener {
 //                mCharacteristic!!.setValue(this)
 //                bleGatt!!.writeCharacteristic(mCharacteristic)
 //            }
-//            edtMsg.setText("")
+//            edtMsg.bindData("")
 //        }
 //    }
 

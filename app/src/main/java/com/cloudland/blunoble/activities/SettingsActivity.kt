@@ -1,28 +1,23 @@
 package com.cloudland.blunoble.activities
 
-import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.design.widget.TextInputEditText
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.utils.Utils
+import com.cloudland.blunoble.utils.SharedPrefObject
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var sharedPrefs: SharedPreferences
-    private lateinit var inputs: ArrayList<TextInputEditText>
+    private var sharedPrefObject: SharedPrefObject? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(application)
-        inputs = arrayListOf(
+        val inputs = arrayListOf(
             prefInputUp,
             prefInputDown,
             prefInputLeft,
@@ -32,10 +27,20 @@ class SettingsActivity : AppCompatActivity() {
             prefInputB,
             prefInputA)
 
-        fillTextInputLayouts()
+        fillTextInputLayouts(inputs)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
-        btnSaveSettingsActivity.setOnClickListener { saveCommandsToSharedPrefs() }
+        btnSaveSettingsActivity.setOnClickListener { saveCommandsToSharedPrefs(inputs) }
         btnCancelSettingsActivity.setOnClickListener { onBackPressed() }
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        sharedPrefObject = SharedPrefObject(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sharedPrefObject = null
     }
 
     override fun onBackPressed() {
@@ -43,22 +48,22 @@ class SettingsActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    private fun saveCommandsToSharedPrefs() {
-        val edito = sharedPrefs.edit()
+    private fun saveCommandsToSharedPrefs(textInputs: ArrayList<TextInputEditText>) {
         val button_pref_keys = resources.obtainTypedArray(R.array.BUTTON_PREF_KEYS)
         val button_pref_defaults = resources.obtainTypedArray(R.array.BUTTON_PREF_DEFAULTS)
 
-        inputs.forEachIndexed {index, input ->
+        textInputs.forEachIndexed {index, input ->
             val inputCommand = input.text.toString()
-            val saveCommand: String
-            saveCommand = if (inputCommand.isNotEmpty()) {
+            val saveCommand = if (inputCommand.isNotEmpty()) {
                 inputCommand
             } else {
                 button_pref_defaults.getString(index) ?: "0"
             }
-            edito.putString(button_pref_keys.getString(index), saveCommand)
+            val key = button_pref_keys.getString(index)
+            if (key != null) {
+                sharedPrefObject?.insertSinglecommand(key, saveCommand)
+            }
         }
-        edito.apply()
         button_pref_keys.recycle()
         button_pref_defaults.recycle()
 
@@ -66,16 +71,19 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun fillTextInputLayouts() {
+    private fun fillTextInputLayouts(textInputs: ArrayList<TextInputEditText>) {
         val button_pref_keys = resources.obtainTypedArray(R.array.BUTTON_PREF_KEYS)
         val button_pref_defaults = resources.obtainTypedArray(R.array.BUTTON_PREF_DEFAULTS)
 
-        inputs.forEachIndexed() { index, input ->
+        textInputs.forEachIndexed() { index, input ->
             val key = button_pref_keys.getString(index)
-            val default = button_pref_defaults.getString(index)
-            val valFromPref = sharedPrefs.getString(key, default) ?: default
+            val default = button_pref_defaults.getString(index) ?: "0"
+            val valFromPref = sharedPrefObject?.retrieveSingleCommand(key, default) ?: default
             input.setText(valFromPref)
         }
+
+        button_pref_keys.recycle()
+        button_pref_defaults.recycle()
     }
 
 }

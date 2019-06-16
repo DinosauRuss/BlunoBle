@@ -37,4 +37,9 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="MyDialogStyle" parent="android:Theme.Material.Light.Dialog.NoActionBar">
+        <item name="android:colorBackground">@color/dark_grey</item>
+        <item name="android:textColor">@android:color/holo_orange_dark</item>
+    </style>
+
 </resources>

@@ -3,6 +3,8 @@
 
     <string name="unknown_device">Unknown Device</string>
     <string name="click_item">Tap item to connect</string>
+    <string name="custom_commands">Custom Commands</string>
+    <string name="add">Add</string>
 
     <string name="toast_no_ble">No Bluetooth LE</string>
     <string name="toast_incorrect_permissions">Incorrect permissions</string>
@@ -26,10 +28,14 @@
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
 
-    <string name="alert_title">Alert</string>
-    <string name="alert_message">Disconnect from \"%s\"?</string>
-    <string name="alert_btn_negative">No</string>
-    <string name="alert_btn_positive">Yes</string>
+    <string name="alert_disconnect_title">Alert</string>
+    <string name="alert_disconnect_message">Disconnect from \"%s\"?</string>
+    <string name="alert_btn_no">No</string>
+    <string name="alert_btn_yes">Yes</string>
+    <string name="alert_command_title">Add Command</string>
+    <string name="alert_command_message">Enter Serial Command</string>
+    <string name="alert_btn_ok">OK</string>
+    <string name="alert_btn_cancel">Cancel</string>
 
     <string name="settings_title">Arduino Commands</string>
     <string name="d_pad">D-Pad</string>
@@ -43,7 +49,8 @@
     <string name="b_button">B-button</string>
     <string name="a_button">A-button</string>
 
-    <string-array name="BUTTON_PREF_KEYS">
+    <string name="PREF_JSON_KEY" translatable="false">PREF_JSON_KEY</string>
+    <string-array name="BUTTON_PREF_KEYS" translatable="false">
         <item>UP_ARROW</item>
         <item>DOWN_ARROW</item>
         <item>LEFT_ARROW</item>
@@ -54,7 +61,7 @@
         <item>A_BUTTON</item>
     </string-array>
 
-    <string-array name="BUTTON_PREF_DEFAULTS">
+    <string-array name="BUTTON_PREF_DEFAULTS" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
