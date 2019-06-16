@@ -14,12 +14,12 @@ import kotlinx.android.synthetic.main.fragment_command.*
 private const val PARAM_NAME = "NAME"
 private const val PARAM_ADDRESS = "address"
 
-class CommandFragment : Fragment() {
+class TerminalFragment : Fragment() {
 
     companion object {
         @JvmStatic
         fun newInstance(name: String, address: String) =
-            CommandFragment().apply {
+            TerminalFragment().apply {
                 arguments = Bundle().apply {
                     putString(PARAM_NAME, name)
                     putString(PARAM_ADDRESS, address)
@@ -36,14 +36,7 @@ class CommandFragment : Fragment() {
         arguments?.let {
             deviceName = it.getString(PARAM_NAME)
             deviceAddr = it.getString(PARAM_ADDRESS)
-            Log.d(Utils.TAG, "command frag created")
         }
-
-        listener?.takeIf { it.checkConnected() }?.apply {
-            progressFragCommand.visibility = View.GONE
-            Log.d(Utils.TAG, "takeIf")
-        }
-        listener?.takeUnless { it.checkConnected() }?.apply { Log.d(Utils.TAG, "takeUnless") }
     }
 
     override fun onCreateView(
@@ -55,11 +48,12 @@ class CommandFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        btnDisconnectFragCommand.setOnClickListener { listener?.unlinkBleDevice() }
-        btnSendFragCommand.setOnClickListener { listener?.sendCommand(getTextFromEdt()) }
+        listener?.takeIf { it.checkConnected() }?.apply {
+            progressFragCommand.visibility = View.GONE
+            Log.d(Utils.TAG, "takeIf")
+        }
 
-//        tvNameFragCommand.text = deviceName
-//        tvAddressFragCommand.text = deviceAddr
+        btnSendFragCommand.setOnClickListener { listener?.sendCommand(getTextFromEdt()) }
     }
 
     override fun onAttach(context: Context) {
@@ -77,7 +71,8 @@ class CommandFragment : Fragment() {
     }
 
     private fun getTextFromEdt(): String? {
-        val msg =  if (edtMsgFragCommand.text.isNotEmpty()) "${edtMsgFragCommand.text}\n" else null
+//        val msg =  if (edtMsgFragCommand.text.isNotEmpty()) "${edtMsgFragCommand.text}\n" else null
+        val msg =  if (edtMsgFragCommand.text.isNotEmpty()) "${edtMsgFragCommand.text}" else null
         msg?.apply { edtMsgFragCommand.setText("") }
 
         return msg

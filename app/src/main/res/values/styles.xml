@@ -32,4 +32,9 @@
         <item name="android:layout_margin">4dp</item>
     </style>
 
+    <style name="myEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:maxLength">10</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
 </resources>

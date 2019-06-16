@@ -13,6 +13,8 @@
     <string name="toast_failure">failure</string>
     <string name="toast_no_devices_found">No devices found</string>
     <string name="toast_device_disconnected">Device disconnected</string>
+    <string name="toast_saved">Saved</string>
+    <string name="toast_not_saved">Not saved</string>
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_scan">Scan</string>
@@ -21,10 +23,46 @@
     <string name="edt_hint_command">Enter Command</string>
     <string name="btn_send">Send</string>
     <string name="btn_unlink">Unlink</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
 
     <string name="alert_title">Alert</string>
     <string name="alert_message">Disconnect from \"%s\"?</string>
     <string name="alert_btn_negative">No</string>
     <string name="alert_btn_positive">Yes</string>
+
+    <string name="settings_title">Arduino Commands</string>
+    <string name="d_pad">D-Pad</string>
+    <string name="up_arrow">Up Arrow</string>
+    <string name="down_arrow">Down Arrow</string>
+    <string name="left_arrow">Left Arrow</string>
+    <string name="right_arrow">Right Arrow</string>
+    <string name="buttons">Buttons</string>
+    <string name="y_button">Y-button</string>
+    <string name="x_button">X-button</string>
+    <string name="b_button">B-button</string>
+    <string name="a_button">A-button</string>
+
+    <string-array name="BUTTON_PREF_KEYS">
+        <item>UP_ARROW</item>
+        <item>DOWN_ARROW</item>
+        <item>LEFT_ARROW</item>
+        <item>RIGHT_ARROW</item>
+        <item>Y_BUTTON</item>
+        <item>X_BUTTON</item>
+        <item>B_BUTTON</item>
+        <item>A_BUTTON</item>
+    </string-array>
+
+    <string-array name="BUTTON_PREF_DEFAULTS">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
 
 </resources>

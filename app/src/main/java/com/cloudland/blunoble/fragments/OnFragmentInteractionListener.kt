@@ -8,4 +8,6 @@ interface OnFragmentInteractionListener {
     fun sendCommand(command: String?)
 
     fun checkConnected(): Boolean
+
+    fun openSettings()
 }

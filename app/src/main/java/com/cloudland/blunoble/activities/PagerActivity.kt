@@ -201,7 +201,6 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
                         Toast.LENGTH_SHORT
                     )
                         .show()
-//                    onBackPressed()
                     finish()
                 }
 
@@ -246,6 +245,11 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
 
     override fun checkConnected(): Boolean {
         return mConnected
+    }
+
+    override fun openSettings() {
+        val intento = Intent(this, SettingsActivity::class.java)
+        startActivity(intento)
     }
 
 }
