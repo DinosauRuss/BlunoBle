@@ -1,18 +1,32 @@
 package com.cloudland.blunoble.utils
 
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
+import android.support.v7.recyclerview.extensions.ListAdapter
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
 import kotlinx.android.synthetic.main.list_item_recycler.view.*
 
 class RecyclerAdapter(
-    private var commandList: ArrayList<String>,
     private val listener: RecyclerInteractionListener?):
-        RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+        ListAdapter<String, RecyclerAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+
+    companion object {
+        private val DIFF_CALLBACK = object: DiffUtil.ItemCallback<String>() {
+            override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -21,27 +35,26 @@ class RecyclerAdapter(
         return ViewHolder(view, listener)
     }
 
-    override fun getItemCount(): Int {
-        return commandList.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(commandList[position], position)
+        holder.bindData( getItem(position) )
     }
 
-    fun notifyListChanged(list: ArrayList<String>) {
-        commandList = list
-        notifyDataSetChanged()
+    fun updateList(list: ArrayList<String>) {
+        // Create a temporary local scope list because submitList
+        // will not work if submitting the list it already has
+        val tempList = ArrayList<String>()
+        tempList.addAll(list)
+        submitList(tempList)
     }
 
 
     class ViewHolder(itemView: View, private val listener: RecyclerInteractionListener?)
         : RecyclerView.ViewHolder(itemView) {
 
-        fun bindData(command: String, position: Int) {
+        fun bindData(command: String) {
             itemView.tvItemRecycler.text = command
             itemView.setOnLongClickListener {
-                listener?.onItemLongPress(position)
+                listener?.onItemLongPress( adapterPosition )
                 return@setOnLongClickListener true
             }
             itemView.btnSendRecycler.setOnClickListener {

@@ -50,6 +50,7 @@
     <string name="a_button">A-button</string>
 
     <string name="PREF_JSON_KEY" translatable="false">PREF_JSON_KEY</string>
+    <string name="repeated_command">Repeated command</string>
     <string-array name="BUTTON_PREF_KEYS" translatable="false">
         <item>UP_ARROW</item>
         <item>DOWN_ARROW</item>

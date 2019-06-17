@@ -32,9 +32,12 @@ class SettingsActivity : AppCompatActivity() {
 
         sharedPrefObject = SharedPrefObject(this)
         fillTextInputLayouts(inputs)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
         btnSaveSettingsActivity.setOnClickListener { saveCommandsToSharedPrefs(inputs) }
         btnCancelSettingsActivity.setOnClickListener { onBackPressed() }
+
+        // Prevent keyboard from opening automatically
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
     }
 
     override fun onResume() {

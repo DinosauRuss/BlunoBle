@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.utils.RecyclerAdapter
 import com.cloudland.blunoble.utils.SharedPrefObject
+import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.alert_dialog_input.view.*
 import kotlinx.android.synthetic.main.fragment_custom_list.*
 
@@ -61,10 +64,14 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
     }
 
     private fun initRecyclerView() {
-        rvFragList.setHasFixedSize(true)
-        adapto = RecyclerAdapter(commandList, this)
-        rvFragList.adapter = adapto
-        rvFragList.layoutManager = LinearLayoutManager(activity)
+//        adapto = RecyclerAdapter(commandList, this)
+        adapto = RecyclerAdapter(this)
+
+        rvFragList.apply {
+            this.setHasFixedSize(true)
+            this.adapter = adapto
+            this.layoutManager = LinearLayoutManager(activity)
+        }
 
         // Load previous list of commands from SharedPreferences
         val key = resources.getString(R.string.PREF_JSON_KEY)
@@ -74,7 +81,7 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
             this.forEach {
                 commandList.add(it)
             }
-            adapto.notifyListChanged(commandList)
+            adapto.updateList(commandList)
         }
     }
 
@@ -98,8 +105,12 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
     }
 
     private fun addCommandToList(command: String) {
-        commandList.add(command)
-        notifyAdapterAndSave()
+        if (command !in commandList) {
+            commandList.add(command)
+            notifyAdapterAndSave()
+        } else {
+            Toast.makeText(activity, getString(R.string.repeated_command), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun removeCommandFromList(position: Int) {
@@ -108,7 +119,7 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
     }
 
     private fun notifyAdapterAndSave() {
-        adapto.notifyListChanged(commandList)
+        adapto.updateList(commandList)
 
         val key = resources.getString(R.string.PREF_JSON_KEY)
         sharedPrefObject?.insertList(key, commandList)
