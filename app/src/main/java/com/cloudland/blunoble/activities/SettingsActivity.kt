@@ -39,6 +39,8 @@ class SettingsActivity : AppCompatActivity() {
 
         // Prevent keyboard from opening automatically
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
+        supportActionBar?.hide()
     }
 
     override fun onResume() {

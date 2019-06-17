@@ -2,9 +2,12 @@ package com.cloudland.blunoble.fragments
 
 
 import android.content.Context
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -67,7 +70,12 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
         rvFragList.apply {
             this.setHasFixedSize(true)
             this.adapter = adapto
-            this.layoutManager = LinearLayoutManager(activity)
+//            this.layoutManager = LinearLayoutManager(activity)
+            if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                this.layoutManager = GridLayoutManager(activity, 2)
+            } else {
+                this.layoutManager = LinearLayoutManager(activity)
+            }
         }
 
         // Load previous list of commands from SharedPreferences

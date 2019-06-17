@@ -73,6 +73,8 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         tvNamePagerActivity.text = deviceName
         tvAddressPagerActivity.text = deviceAddress
         btnDisconnectPagerActivity.setOnClickListener { unlinkBleDevice() }
+
+        supportActionBar?.hide()
     }
 
     override fun onResume() {

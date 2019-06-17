@@ -134,10 +134,9 @@ class DeviceScanActivity : AppCompatActivity() {
 
         val device: BluetoothDevice? = mListAdapter?.getDevice(position)
         device?.also {
-//            val intento = Intent(this, MainActivity::class.java)
             val intento = Intent(this, PagerActivity::class.java)
-            intento.putExtra(MainActivity.INTENT_EXTRAS_NAME, device.name)
-            intento.putExtra(MainActivity.INTENT_EXTRAS_ADDRESS, device.address)
+            intento.putExtra(PagerActivity.INTENT_EXTRAS_NAME, device.name)
+            intento.putExtra(PagerActivity.INTENT_EXTRAS_ADDRESS, device.address)
             startActivity(intento)
         }
     }
