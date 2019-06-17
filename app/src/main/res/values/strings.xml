@@ -17,6 +17,7 @@
     <string name="toast_device_disconnected">Device disconnected</string>
     <string name="toast_saved">Saved</string>
     <string name="toast_not_saved">Not saved</string>
+    <string name="toast_repeated_command">Repeated command</string>
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_scan">Scan</string>
@@ -49,16 +50,16 @@
     <string name="a_button">A-button</string>
 
     <string name="PREF_JSON_KEY" translatable="false">PREF_JSON_KEY</string>
-    <string name="repeated_command">Repeated command</string>
+
     <string-array name="BUTTON_PREF_KEYS" translatable="false">
         <item>UP_ARROW</item>
         <item>DOWN_ARROW</item>
         <item>LEFT_ARROW</item>
         <item>RIGHT_ARROW</item>
-        <item>Y_BUTTON</item>
-        <item>X_BUTTON</item>
-        <item>B_BUTTON</item>
         <item>A_BUTTON</item>
+        <item>B_BUTTON</item>
+        <item>X_BUTTON</item>
+        <item>Y_BUTTON</item>
     </string-array>
 
     <string-array name="BUTTON_PREF_DEFAULTS" translatable="false">

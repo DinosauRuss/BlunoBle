@@ -25,10 +25,11 @@ class SettingsActivity : AppCompatActivity() {
             prefInputDown,
             prefInputLeft,
             prefInputRight,
-            prefInputY,
-            prefInputX,
+            prefInputA,
             prefInputB,
-            prefInputA)
+            prefInputX,
+            prefInputY
+            )
 
         sharedPrefObject = SharedPrefObject(this)
         fillTextInputLayouts(inputs)

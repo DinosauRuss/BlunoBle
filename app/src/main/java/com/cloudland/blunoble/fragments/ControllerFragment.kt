@@ -55,10 +55,11 @@ class ControllerFragment : Fragment() {
             btnArrowDown,
             btnArrowLeft,
             btnArrowRight,
-            btnYController,
-            btnXController,
+            btnAController,
             btnBController,
-            btnAController)
+            btnXController,
+            btnYController
+            )
 
         btnSettingsFragController.setOnClickListener { listener?.openSettings() }
         buttons.forEachIndexed {index, imageButton ->
