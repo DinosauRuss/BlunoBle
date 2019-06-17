@@ -15,7 +15,8 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_settings"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/contentDescription_settings"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guidelineArrows"
@@ -25,7 +26,6 @@
         app:layout_constraintGuide_percent="0.15" />
 
     <FrameLayout
-        android:id="@+id/arrowPad"
         android:layout_width="220dp"
         android:layout_height="220dp"
         android:focusable="true"
@@ -41,7 +41,9 @@
             android:layout_margin="5dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            android:src="@drawable/btn_arrow" />
+            android:src="@drawable/btn_arrow"
+            android:focusable="true"
+            android:contentDescription="@string/contentDescription_up"/>
 
         <ImageButton
             android:id="@+id/btnArrowLeft"
@@ -53,7 +55,8 @@
             android:background="@android:color/transparent"
             android:rotation="270"
             android:scaleType="fitXY"
-            android:src="@drawable/btn_arrow" />
+            android:src="@drawable/btn_arrow"
+            android:contentDescription="@string/contentDescription_left"/>
 
         <ImageButton
             android:id="@+id/btnArrowDown"
@@ -64,7 +67,8 @@
             android:background="@android:color/transparent"
             android:rotation="180"
             android:scaleType="fitXY"
-            android:src="@drawable/btn_arrow" />
+            android:src="@drawable/btn_arrow"
+            android:contentDescription="@string/contentDescription_down"/>
 
         <ImageButton
             android:id="@+id/btnArrowRight"
@@ -75,7 +79,8 @@
             android:background="@android:color/transparent"
             android:rotation="90"
             android:scaleType="fitXY"
-            android:src="@drawable/btn_arrow" />
+            android:src="@drawable/btn_arrow"
+            android:contentDescription="@string/contentDescription_right"/>
     </FrameLayout>
 
     <android.support.constraint.Guideline
@@ -94,7 +99,6 @@
         android:orientation="horizontal"
         android:focusable="true">
 
-
         <ImageButton
             android:id="@+id/btnAController"
             android:layout_width="@dimen/btn_height"
@@ -102,7 +106,8 @@
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/btn_controller_a" />
+            android:src="@drawable/btn_controller_a"
+            android:contentDescription="@string/contentDescription_a"/>
 
         <ImageButton
             android:id="@+id/btnBController"
@@ -111,7 +116,8 @@
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/btn_controller_b" />
+            android:src="@drawable/btn_controller_b"
+            android:contentDescription="@string/contentDescription_b"/>
 
         <ImageButton
             android:id="@+id/btnXController"
@@ -120,7 +126,8 @@
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/btn_controller_x" />
+            android:src="@drawable/btn_controller_x"
+            android:contentDescription="@string/contentDescription_x"/>
 
         <ImageButton
             android:id="@+id/btnYController"
@@ -128,7 +135,8 @@
             android:layout_height="@dimen/btn_height"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            android:src="@drawable/btn_controller_y" />
+            android:src="@drawable/btn_controller_y"
+            android:contentDescription="@string/contentDescription_y"/>
     </android.support.v7.widget.LinearLayoutCompat>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="btn_width">50dp</dimen>
     <dimen name="btn_height">70dp</dimen>
     <dimen name="btn_arrow_default">70dp</dimen>
 
-    <dimen name="textInputLayoutSidePadding">20dp</dimen>
 </resources>

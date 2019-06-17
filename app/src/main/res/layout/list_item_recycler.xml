@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:layout_margin="4dp"
     android:background="@drawable/bg_list_item"
-    android:layout_margin="4dp">
+    android:padding="8dp">
 
     <TextView
+        android:id="@+id/tvItemRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:fontFamily="sans-serif"
         android:textSize="30sp"
-        tools:text="abcdeABCDE01489"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/tvItemRecycler"
-        android:fontFamily="sans-serif"/>
+        tools:text="abcdeABCDE01489" />
 
     <ImageButton
         android:id="@+id/btnSendRecycler"
@@ -26,6 +26,7 @@
         android:layout_height="48dp"
         android:layout_margin="8dp"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/contentDescription_send_command"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

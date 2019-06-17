@@ -1,17 +1,48 @@
 <resources>
-    <string name="app_name" translatable="false">Arduino Ble</string>
+    <string name="app_name" translatable="false">Arduino BLE</string>
 
+    // Scan activity
     <string name="unknown_device">Unknown Device</string>
     <string name="click_item">Tap item to connect</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_stop">Stop</string>
+
+    // ViewPager activity
+    <string name="tab_title_Terminal">Terminal</string>
+    <string name="tab_title_Controller">Controller</string>
+    <string name="tab_title_list">List</string>
+
+    // Terminal fragment
+    <string name="edt_hint_command">Enter Command</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_unlink">Unlink</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+
+    // Recycler list fragment
     <string name="custom_commands">Custom Commands</string>
     <string name="add">Add</string>
 
+    // Settings activity
+    <string name="settings_title">Custom Button Commands</string>
+    <string name="d_pad" translatable="false">D-Pad</string>
+    <string name="edt_hint_up_arrow">Up Arrow</string>
+    <string name="edt_hint_down_arrow">Down Arrow</string>
+    <string name="edt_hint_left_arrow">Left Arrow</string>
+    <string name="edt_hint_right_arrow">Right Arrow</string>
+    <string name="buttons">Buttons</string>
+    <string name="edt_hint_y_button">Y-button</string>
+    <string name="edt_hint_x_button">X-button</string>
+    <string name="edt_hint_b_button">B-button</string>
+    <string name="edt_hint_a_button">A-button</string>
+
+    // Toasts
     <string name="toast_no_ble">No Bluetooth LE</string>
     <string name="toast_incorrect_permissions">Incorrect permissions</string>
     <string name="toast_connected_to">Connected to %s</string>
     <string name="toast_connect_fail">Connection failure</string>
     <string name="toast_send_data">Send data %s</string>
-    <string name="toast_success">success</string>
     <string name="toast_failure">failure</string>
     <string name="toast_no_devices_found">No devices found</string>
     <string name="toast_device_disconnected">Device disconnected</string>
@@ -19,35 +50,26 @@
     <string name="toast_not_saved">Not saved</string>
     <string name="toast_repeated_command">Repeated command</string>
 
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_scan">Scan</string>
-    <string name="menu_stop">Stop</string>
-
-    <string name="edt_hint_command">Enter Command</string>
-    <string name="btn_send">Send</string>
-    <string name="btn_unlink">Unlink</string>
-    <string name="btn_save">Save</string>
-    <string name="btn_cancel">Cancel</string>
-
+    // AlertDialogs
     <string name="alert_disconnect_title">Alert</string>
     <string name="alert_disconnect_message">Disconnect from \"%s\"?</string>
     <string name="alert_btn_no">No</string>
     <string name="alert_btn_yes">Yes</string>
     <string name="alert_command_title">Add Command</string>
-    <string name="alert_btn_ok">OK</string>
+    <string name="alert_btn_ok" translatable="false">OK</string>
     <string name="alert_btn_cancel">Cancel</string>
 
-    <string name="settings_title">Arduino Commands</string>
-    <string name="d_pad">D-Pad</string>
-    <string name="up_arrow">Up Arrow</string>
-    <string name="down_arrow">Down Arrow</string>
-    <string name="left_arrow">Left Arrow</string>
-    <string name="right_arrow">Right Arrow</string>
-    <string name="buttons">Buttons</string>
-    <string name="y_button">Y-button</string>
-    <string name="x_button">X-button</string>
-    <string name="b_button">B-button</string>
-    <string name="a_button">A-button</string>
+    // ImageButton content descriptions
+    <string name="contentDescription_send_command">send command</string>
+    <string name="contentDescription_settings">settings</string>
+    <string name="contentDescription_up">up</string>
+    <string name="contentDescription_down">down</string>
+    <string name="contentDescription_left">left</string>
+    <string name="contentDescription_right">right</string>
+    <string name="contentDescription_a" translatable="false">A</string>
+    <string name="contentDescription_b" translatable="false">B</string>
+    <string name="contentDescription_x" translatable="false">X</string>
+    <string name="contentDescription_y" translatable="false">Y</string>
 
     <string name="PREF_JSON_KEY" translatable="false">PREF_JSON_KEY</string>
 

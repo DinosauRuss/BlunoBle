@@ -16,9 +16,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
@@ -27,7 +25,6 @@ import com.cloudland.blunoble.utils.GattClientCallback
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_pager.*
-import kotlinx.android.synthetic.main.fragment_terminal.*
 
 class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentInteractionListener {
 
@@ -66,7 +63,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
             setLoadingVisibility()
         }
 
-        val vpAdapter = ViewPagerAdapter(deviceName, deviceAddress, supportFragmentManager)
+        val vpAdapter = ViewPagerAdapter(this, supportFragmentManager)
         viewPager.adapter = vpAdapter
         tabLayout.setupWithViewPager(viewPager)
 

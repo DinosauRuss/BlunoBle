@@ -92,7 +92,7 @@ class SettingsActivity : AppCompatActivity() {
         val button_pref_keys = resources.obtainTypedArray(R.array.BUTTON_PREF_KEYS)
         val button_pref_defaults = resources.obtainTypedArray(R.array.BUTTON_PREF_DEFAULTS)
 
-        textInputs.forEachIndexed() { index, input ->
+        textInputs.forEachIndexed { index, input ->
             val key = button_pref_keys.getString(index)
             val default = button_pref_defaults.getString(index) ?: "0"
             val valFromPref = sharedPrefObject?.retrieveSingleCommand(key, default) ?: default

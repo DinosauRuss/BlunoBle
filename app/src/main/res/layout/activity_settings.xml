@@ -43,7 +43,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/up_arrow"
+                    android:hint="@string/edt_hint_up_arrow"
                     android:id="@+id/prefInputUp"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -55,7 +55,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/down_arrow"
+                    android:hint="@string/edt_hint_down_arrow"
                     android:id="@+id/prefInputDown"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -67,7 +67,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/left_arrow"
+                    android:hint="@string/edt_hint_left_arrow"
                     android:id="@+id/prefInputLeft"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -79,7 +79,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/right_arrow"
+                    android:hint="@string/edt_hint_right_arrow"
                     android:id="@+id/prefInputRight"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -98,7 +98,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/a_button"
+                    android:hint="@string/edt_hint_a_button"
                     android:id="@+id/prefInputA"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -110,7 +110,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/b_button"
+                    android:hint="@string/edt_hint_b_button"
                     android:id="@+id/prefInputB"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -122,7 +122,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/x_button"
+                    android:hint="@string/edt_hint_x_button"
                     android:id="@+id/prefInputX"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
@@ -134,7 +134,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/y_button"
+                    android:hint="@string/edt_hint_y_button"
                     android:id="@+id/prefInputY"
                     style="@style/myEditText"/>
             </android.support.design.widget.TextInputLayout>
