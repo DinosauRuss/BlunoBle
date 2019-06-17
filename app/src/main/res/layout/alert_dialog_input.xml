@@ -4,12 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp">
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/alert_command_title"
+        android:textSize="20sp"
+        android:layout_marginBottom="12dp"
+        android:textColor="@android:color/holo_orange_dark"
+        android:id="@+id/alertTitle"/>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alertTitle">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"

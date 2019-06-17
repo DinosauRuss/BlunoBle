@@ -35,6 +35,8 @@
     <style name="myEditText" parent="Widget.AppCompat.EditText">
         <item name="android:maxLength">10</item>
         <item name="android:maxLines">1</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:inputType">text</item>
     </style>
 
     <style name="MyDialogStyle" parent="android:Theme.Material.Light.Dialog.NoActionBar">

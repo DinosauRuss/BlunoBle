@@ -2,6 +2,7 @@ package com.cloudland.blunoble.fragments
 
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 
 import com.cloudland.blunoble.R
@@ -64,7 +66,6 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
     }
 
     private fun initRecyclerView() {
-//        adapto = RecyclerAdapter(commandList, this)
         adapto = RecyclerAdapter(this)
 
         rvFragList.apply {
@@ -89,8 +90,6 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
         val view = LayoutInflater.from(context).inflate(R.layout.alert_dialog_input, view as ViewGroup, false)
 
         AlertDialog.Builder(context, R.style.MyDialogStyle)
-            .setTitle(getString(R.string.alert_command_title))
-            .setMessage(getString(R.string.alert_command_message))
             .setView(view)
             .setPositiveButton(getString(R.string.alert_btn_ok)) { dialog, which ->
                 view.edtAlertCommand.text?.takeIf { it.isNotEmpty() }?.apply {

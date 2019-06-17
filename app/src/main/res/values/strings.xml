@@ -33,7 +33,6 @@
     <string name="alert_btn_no">No</string>
     <string name="alert_btn_yes">Yes</string>
     <string name="alert_command_title">Add Command</string>
-    <string name="alert_command_message">Enter Serial Command</string>
     <string name="alert_btn_ok">OK</string>
     <string name="alert_btn_cancel">Cancel</string>
 

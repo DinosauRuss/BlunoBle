@@ -48,8 +48,10 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         sharedPrefObject = null
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
+        super.onDestroy()
     }
 
     override fun onBackPressed() {

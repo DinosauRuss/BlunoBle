@@ -26,9 +26,8 @@
             android:layout_weight="7"
             android:background="@drawable/edt_bg"
             android:hint="@string/edt_hint_command"
-            android:inputType="text"
-            android:maxLength="15"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill"
+            style="@style/myEditText"/>
 
         <Button
             android:id="@+id/btnSendFragCommand"
