@@ -2,11 +2,14 @@ package com.cloudland.blunoble.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.design.widget.TextInputEditText
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.utils.SharedPrefObject
+import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
@@ -27,19 +30,22 @@ class SettingsActivity : AppCompatActivity() {
             prefInputB,
             prefInputA)
 
+        sharedPrefObject = SharedPrefObject(this)
         fillTextInputLayouts(inputs)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         btnSaveSettingsActivity.setOnClickListener { saveCommandsToSharedPrefs(inputs) }
         btnCancelSettingsActivity.setOnClickListener { onBackPressed() }
     }
 
-    override fun onPostResume() {
-        super.onPostResume()
-        sharedPrefObject = SharedPrefObject(this)
+    override fun onResume() {
+        super.onResume()
+        if (sharedPrefObject == null) {
+            sharedPrefObject = SharedPrefObject(this)
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         sharedPrefObject = null
     }
 
@@ -72,6 +78,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun fillTextInputLayouts(textInputs: ArrayList<TextInputEditText>) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        Log.d(Utils.TAG, "${prefs.all}")
+        Log.d(Utils.TAG, "pref obj: $sharedPrefObject")
         val button_pref_keys = resources.obtainTypedArray(R.array.BUTTON_PREF_KEYS)
         val button_pref_defaults = resources.obtainTypedArray(R.array.BUTTON_PREF_DEFAULTS)
 

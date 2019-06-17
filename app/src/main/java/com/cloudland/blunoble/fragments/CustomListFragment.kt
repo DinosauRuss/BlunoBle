@@ -114,8 +114,13 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
         sharedPrefObject?.insertList(key, commandList)
     }
 
+    // ----- RecyclerInteractionListener methods -----
     override fun onItemLongPress(position: Int) {
         removeCommandFromList(position)
+    }
+
+    override fun onSendImagePress(command: String) {
+        listener?.sendCommand(command)
     }
 
 }

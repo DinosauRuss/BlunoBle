@@ -25,7 +25,7 @@ import com.cloudland.blunoble.utils.GattClientCallback
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_pager.*
-import kotlinx.android.synthetic.main.fragment_command.*
+import kotlinx.android.synthetic.main.fragment_terminal.*
 
 class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentInteractionListener {
 
@@ -60,6 +60,8 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
             bleAdapter = bleManager.adapter
             bleScanner = bleAdapter?.bluetoothLeScanner
             connectDevice(deviceAddress)
+
+            setLoadingVisibility()
         }
 
         val vpAdapter = ViewPagerAdapter(deviceName, deviceAddress, supportFragmentManager)
@@ -162,6 +164,18 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         }
     }
 
+    private fun setLoadingVisibility() {
+        viewPager.visibility = View.INVISIBLE
+        tabLayout.visibility = View.INVISIBLE
+        progressBarPagerActivity.visibility = View.VISIBLE
+    }
+
+    private fun setConnectedVisibility() {
+        viewPager.visibility = View.VISIBLE
+        tabLayout.visibility = View.VISIBLE
+        progressBarPagerActivity.visibility = View.INVISIBLE
+    }
+
 
     // ----- Gatt action Listener -----
 
@@ -186,7 +200,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
             true -> {
                 mConnected = true
                 this.runOnUiThread {
-                    progressFragCommand.visibility = View.GONE
+                    setConnectedVisibility()
                     Toast.makeText(
                         this,
                         getString(R.string.toast_connected_to).format(bleGatt?.device?.name),

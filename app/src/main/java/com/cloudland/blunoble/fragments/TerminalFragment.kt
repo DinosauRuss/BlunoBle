@@ -3,13 +3,11 @@ package com.cloudland.blunoble.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.utils.Utils
-import kotlinx.android.synthetic.main.fragment_command.*
+import kotlinx.android.synthetic.main.fragment_terminal.*
 
 
 class TerminalFragment : Fragment() {
@@ -23,15 +21,11 @@ class TerminalFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_command, container, false)
+        return inflater.inflate(R.layout.fragment_terminal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        listener?.takeIf { it.checkConnected() }?.apply {
-            progressFragCommand.visibility = View.GONE
-        }
 
         btnSendFragCommand.setOnClickListener { listener?.sendCommand(getTextFromEdt()) }
     }
