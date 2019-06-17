@@ -39,9 +39,23 @@
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="MyDialogStyle" parent="android:Theme.Material.Light.Dialog.NoActionBar">
+    <!--<style name="MyDialogStyle" parent="android:Theme.Material.Light.Dialog.NoActionBar">-->
+    <style name="MyDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:colorBackground">@color/dark_grey</item>
+        // Title color
         <item name="android:textColor">@android:color/holo_orange_dark</item>
+        // Message color
+        <item name="android:textColorPrimary">@android:color/white</item>
+        // Positive/negative button color
+        <item name="colorAccent">@android:color/white</item>
+
+        <item name="android:textAppearanceSmall">@style/myTextAppearance</item>
+        <item name="android:textAppearanceMedium">@style/myTextAppearance</item>
+        <item name="android:textAppearanceLarge">@style/myTextAppearance</item>
+    </style>
+
+    <style name="myTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
     </style>
 
 </resources>

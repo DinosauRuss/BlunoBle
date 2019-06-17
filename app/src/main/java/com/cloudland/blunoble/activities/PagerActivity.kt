@@ -16,7 +16,9 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
@@ -98,7 +100,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
 
     override fun onBackPressed() {
         if (mConnected) {
-            val alertDialog = AlertDialog.Builder(this)
+            AlertDialog.Builder(this, R.style.MyDialogStyle)
                 .setTitle( "${getString(R.string.alert_disconnect_title)}!" )
                 .setMessage(getString(R.string.alert_disconnect_message).format(bleGatt?.device?.name))
                 .setNegativeButton(getString(R.string.alert_btn_no)) { dialog, id ->
@@ -110,9 +112,6 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
                     super.onBackPressed()
                 }
                 .show()
-            val btnColor = ContextCompat.getColor(this, android.R.color.black)
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(btnColor)
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(btnColor)
         }
     }
 
