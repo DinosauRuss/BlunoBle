@@ -1,5 +1,6 @@
 package com.cloudland.blunoble.utils
 
+import android.content.Context
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
@@ -54,7 +55,7 @@ class RecyclerAdapter(
         fun bindData(command: String) {
             itemView.tvItemRecycler.text = command
             itemView.setOnLongClickListener {
-                listener?.onItemLongPress( adapterPosition )
+                listener?.onItemLongPress(itemView.context, adapterPosition )
                 return@setOnLongClickListener true
             }
             itemView.btnSendRecycler.setOnClickListener {
@@ -68,7 +69,7 @@ class RecyclerAdapter(
     }
 
     interface RecyclerInteractionListener {
-        fun onItemLongPress(position: Int)
+        fun onItemLongPress(context: Context, position: Int)
         fun onSendImagePress(command: String)
     }
 

@@ -115,9 +115,17 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
         }
     }
 
-    private fun removeCommandFromList(position: Int) {
-        commandList.removeAt(position)
-        notifyAdapterAndSave()
+    private fun removeCommandFromList(context: Context, position: Int) {
+        AlertDialog.Builder(context, R.style.MyDialogStyle)
+            .setTitle("Delete Item?")
+            .setNegativeButton(getString(R.string.alert_btn_cancel)) { dialog, which ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.alert_btn_ok)) { dialog, which ->
+                commandList.removeAt(position)
+                notifyAdapterAndSave()
+            }
+            .show()
     }
 
     private fun notifyAdapterAndSave() {
@@ -128,8 +136,8 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
     }
 
     // ----- RecyclerInteractionListener methods -----
-    override fun onItemLongPress(position: Int) {
-        removeCommandFromList(position)
+    override fun onItemLongPress(context: Context, position: Int) {
+        removeCommandFromList(context, position)
     }
 
     override fun onSendImagePress(command: String) {
