@@ -6,16 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".activities.PagerActivity">
 
-    <ProgressBar
+    <!--<ProgressBar-->
+        <!--android:id="@+id/progressBarPagerActivity"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="200dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--android:visibility="invisible"-->
+        <!--app:layout_constraintVertical_bias=".4" />-->
+    <ImageView
         android:id="@+id/progressBarPagerActivity"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"
-        app:layout_constraintVertical_bias=".4"/>
+        tools:visibility="visible"
+        app:layout_constraintVertical_bias=".4"
+        app:srcCompat="@drawable/avd_progress"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"

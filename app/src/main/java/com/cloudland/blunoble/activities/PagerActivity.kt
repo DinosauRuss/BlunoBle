@@ -10,8 +10,11 @@ import android.bluetooth.le.BluetoothLeScanner
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.graphics.drawable.Animatable2Compat
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -166,12 +169,25 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         viewPager.visibility = View.INVISIBLE
         tabLayout.visibility = View.INVISIBLE
         progressBarPagerActivity.visibility = View.VISIBLE
+        val drawable =
+            AnimatedVectorDrawableCompat.create(this, R.drawable.avd_progress)
+        drawable?.registerAnimationCallback(object: Animatable2Compat.AnimationCallback() {
+            override fun onAnimationEnd(drawableAnim: Drawable?) {
+                progressBarPagerActivity.post {drawable.start()}
+            }
+        })
+        progressBarPagerActivity.setImageDrawable(drawable)
+        drawable?.start()
     }
 
     private fun setConnectedVisibility() {
         viewPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
-        progressBarPagerActivity.visibility = View.INVISIBLE
+        val drawable = progressBarPagerActivity.drawable
+        if (drawable is AnimatedVectorDrawableCompat) {
+            drawable.stop()
+        }
+        progressBarPagerActivity.visibility = View.GONE
     }
 
 
