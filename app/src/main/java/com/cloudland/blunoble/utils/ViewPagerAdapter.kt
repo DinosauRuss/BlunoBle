@@ -5,14 +5,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.fragments.SeekBarFragment
 import com.cloudland.blunoble.fragments.TerminalFragment
 import com.cloudland.blunoble.fragments.ControllerFragment
 import com.cloudland.blunoble.fragments.CustomListFragment
 
 class ViewPagerAdapter(private val activity: Activity, fm: FragmentManager): FragmentPagerAdapter(fm) {
 
-    private val COUNT = 4
+    private val COUNT = 3
 
     override fun getItem(position: Int): Fragment? {
         var frago: Fragment? = null
@@ -20,7 +19,6 @@ class ViewPagerAdapter(private val activity: Activity, fm: FragmentManager): Fra
             0 -> frago = TerminalFragment()
             1 -> frago = ControllerFragment()
             2 -> frago = CustomListFragment()
-            3 -> frago = SeekBarFragment()
         }
         return frago
     }
@@ -35,7 +33,6 @@ class ViewPagerAdapter(private val activity: Activity, fm: FragmentManager): Fra
             0 -> title = activity.getString(R.string.tab_title_Terminal)
             1 -> title = activity.getString(R.string.tab_title_Controller)
             2 -> title = activity.getString(R.string.tab_title_list)
-            3 -> title = "Seek"
         }
         return title
     }

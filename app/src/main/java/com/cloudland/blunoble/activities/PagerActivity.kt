@@ -3,6 +3,8 @@ package com.cloudland.blunoble.activities
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.le.ScanResult
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -18,6 +20,8 @@ import android.view.View
 import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
+import com.cloudland.blunoble.utils.BleHelper
+import com.cloudland.blunoble.utils.BleInteractor
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_pager.*
@@ -47,7 +51,7 @@ class PagerActivity : AppCompatActivity(),
         deviceName = receivedIntent.getStringExtra(INTENT_EXTRAS_NAME)
         val deviceAddress = receivedIntent.getStringExtra(INTENT_EXTRAS_ADDRESS)
 
-        bleHelper = BleHelper(this, deviceAddress)
+        bleHelper = BleHelper(this, mConnected, deviceAddress)
 
         if (!mConnected) {
             setLoadingVisibility()
@@ -182,13 +186,7 @@ class PagerActivity : AppCompatActivity(),
         }
     }
 
-    override fun requestBleEnable() {
-        val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
-    }
-
     override fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
-//        if (bleAdapter == null || bleAdapter?.isEnabled == false) {
         if (bleAdapter == null || !bleAdapter.isEnabled) {
             requestBleEnable()
             return false
@@ -197,6 +195,11 @@ class PagerActivity : AppCompatActivity(),
             return false
         }
         return true
+    }
+
+    private fun requestBleEnable() {
+        val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
     }
 
     private fun hasLocationPermission(): Boolean {
@@ -212,6 +215,14 @@ class PagerActivity : AppCompatActivity(),
             REQUEST_FINE_LOCATION
         )
     }
+
+    override fun getContext(): Context {
+        return this.applicationContext
+    }
+
+    override fun processScanResult(result: ScanResult) {}
+
+    override fun stopScan(){}
 
     // ----- Fragment interaction methods -----
     override fun unlinkBleDevice() {

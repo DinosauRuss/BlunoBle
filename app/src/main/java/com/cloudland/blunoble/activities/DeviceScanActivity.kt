@@ -4,14 +4,11 @@ import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.ParcelUuid
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -25,23 +22,22 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.cloudland.blunoble.R
+import com.cloudland.blunoble.utils.BleHelper
+import com.cloudland.blunoble.utils.BleInteractor
 import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_device_scan.*
 
-class DeviceScanActivity : AppCompatActivity() {
+class DeviceScanActivity : AppCompatActivity(), BleInteractor {
 
     companion object {
         private var returnFromResult = false
     }
 
-    private val mHandler: Handler = Handler()
-    private var bleAdapter: BluetoothAdapter? = null
-    private var bleScanner: BluetoothLeScanner? = null
     private var mListAdapter: LeDeviceListAdapter? = null
+    private var bleHelper: BleHelper? = null
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
-    private val SCAN_PERIOD = 10000L
     private var mScanning = false
 
 
@@ -57,9 +53,7 @@ class DeviceScanActivity : AppCompatActivity() {
             finish()
         }
 
-        val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bleAdapter = bleManager.adapter
-        bleScanner = bleAdapter?.bluetoothLeScanner
+        bleHelper = BleHelper(this, false)
 
         if (returnFromResult) {
             startScan()
@@ -84,7 +78,6 @@ class DeviceScanActivity : AppCompatActivity() {
         super.onStop()
 
         stopScan()
-        mHandler.removeCallbacksAndMessages(null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -142,39 +135,24 @@ class DeviceScanActivity : AppCompatActivity() {
     }
 
     private fun startScan() {
-        if (mScanning || !hasPermissions()) {
+        if (mScanning || !hasPermissions(bleHelper?.getBleAdapter())) {
             Log.d(Utils.TAG, "Cannot scan")
             return
         }
 
         mScanning = true
-        val uuidFilter = ScanFilter.Builder()
-            .setServiceUuid(ParcelUuid.fromString(Utils.SERVICE_SERIAL_UUID))
-            .build()
-        val filterList = ArrayList<ScanFilter>()
-        filterList.add(uuidFilter)
-
-        val settings = ScanSettings.Builder()
-            .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-            .build()
-
-        bleScanner?.startScan(filterList, settings, leScanCallback)
         mListAdapter?.clear()
         invalidateOptionsMenu()
         tvScanInstr.visibility = View.INVISIBLE
 
-        // Stops scanning after a period
-        mHandler.postDelayed({
-            stopScan()
-        }, SCAN_PERIOD)
+        bleHelper?.startScan()
     }
 
-    private fun stopScan() {
+    override fun stopScan() {
         if (mScanning) {
-            bleScanner?.stopScan(leScanCallback)
+            bleHelper?.stopScan()
             mScanning = false
             invalidateOptionsMenu()
-            mHandler.removeCallbacksAndMessages(null)
 
             mListAdapter?.also {
                 if (it.count > 0) {
@@ -184,13 +162,11 @@ class DeviceScanActivity : AppCompatActivity() {
                 }
             }
         }
-
-        mHandler.removeCallbacksAndMessages(null)
     }
 
-
-    private fun hasPermissions(): Boolean {
-        if (bleAdapter == null || bleAdapter?.isEnabled == false) {
+    // BleInteractor interface methods
+    override fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
+        if (bleAdapter == null || !bleAdapter.isEnabled) {
             Log.d(Utils.TAG, "adapter fail")
             requestBleEnable()
             return false
@@ -220,23 +196,21 @@ class DeviceScanActivity : AppCompatActivity() {
         startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
     }
 
-    private val leScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            Log.d(Utils.TAG, "${result?.device}, ${result?.device?.name}")
-            result?.apply { processResult(this) }
-        }
-
-        override fun onScanFailed(errorCode: Int) {
-            Log.e(Utils.TAG, "Scan failed: $errorCode")
-        }
-
-        private fun processResult(result: ScanResult) {
-            result.device?.apply {
-                mListAdapter?.addDevice(this)
-            }
-        }
+    override fun getContext(): Context {
+        return this.applicationContext
     }
 
+    override fun onGattDisconnect() {}
+
+    override fun onGattConnectionResult(connect: Boolean) {}
+
+    override fun onWriteSuccessOrFailure(result: Boolean) {}
+
+    override fun processScanResult(result: ScanResult) {
+        result.device?.apply {
+            mListAdapter?.addDevice(this)
+        }
+    }
 
     inner class LeDeviceListAdapter : BaseAdapter() {
 
