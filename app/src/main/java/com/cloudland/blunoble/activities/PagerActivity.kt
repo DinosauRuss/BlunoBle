@@ -144,6 +144,7 @@ class PagerActivity : AppCompatActivity(),
             }
         }
         mConnected = false
+        finish()
     }
 
     override fun onGattConnectionResult(connect: Boolean) {
