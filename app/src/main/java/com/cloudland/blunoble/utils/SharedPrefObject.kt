@@ -5,6 +5,9 @@ import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+/*
+A class to handle saving and retrieving information from SharedPreferences
+ */
 class SharedPrefObject(context: Context) {
 
     private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)

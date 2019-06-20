@@ -1,7 +1,10 @@
-package com.cloudland.blunoble.utils
+package com.cloudland.blunoble.bleUtils
 
 import android.bluetooth.BluetoothGattCharacteristic
 
+/*
+Interface to receive callbacks from a BluetoothGattCallback
+ */
 interface GattClientActionListener {
 
     fun disconnectGattServer()

@@ -1,9 +1,13 @@
-package com.cloudland.blunoble.utils
+package com.cloudland.blunoble.bleUtils
 
 import android.bluetooth.*
 import android.util.Log
+import com.cloudland.blunoble.utils.Utils
 import java.util.*
 
+/*
+Class which receives information from Ble device and executes callbacks
+ */
 class GattClientCallback( private val mClientActionListener: GattClientActionListener) : BluetoothGattCallback() {
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {

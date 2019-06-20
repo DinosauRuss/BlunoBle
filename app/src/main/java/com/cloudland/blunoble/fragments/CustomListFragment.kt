@@ -21,6 +21,9 @@ import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.alert_dialog_input.view.*
 import kotlinx.android.synthetic.main.fragment_custom_list.*
 
+/*
+A fragment for creating a list of customized and persisted commands
+ */
 class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListener {
 
     private var sharedPrefObject: SharedPrefObject? = null

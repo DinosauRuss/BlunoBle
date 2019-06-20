@@ -3,7 +3,6 @@ package com.cloudland.blunoble.activities
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,16 +18,16 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.cloudland.blunoble.R
+import com.cloudland.blunoble.bleUtils.BleConnectionHelper
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
-import com.cloudland.blunoble.utils.BleHelper
-import com.cloudland.blunoble.utils.BleInteractor
+import com.cloudland.blunoble.bleUtils.BleInteractor
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_pager.*
 
 class PagerActivity : AppCompatActivity(),
     OnFragmentInteractionListener,
-    BleInteractor {
+    BleInteractor.Connector {
 
     companion object {
         const val INTENT_EXTRAS_NAME = "name"
@@ -38,7 +37,7 @@ class PagerActivity : AppCompatActivity(),
         private var deviceName: String? = null
     }
 
-    private var bleHelper: BleHelper? = null
+    private var bleConnectionHelper: BleConnectionHelper? = null
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
@@ -51,7 +50,7 @@ class PagerActivity : AppCompatActivity(),
         deviceName = receivedIntent.getStringExtra(INTENT_EXTRAS_NAME)
         val deviceAddress = receivedIntent.getStringExtra(INTENT_EXTRAS_ADDRESS)
 
-        bleHelper = BleHelper(this, mConnected, deviceAddress)
+        bleConnectionHelper = BleConnectionHelper(this, deviceAddress, mConnected)
 
         if (!mConnected) {
             setLoadingVisibility()
@@ -78,7 +77,7 @@ class PagerActivity : AppCompatActivity(),
             finish()
         }
 
-        if (!hasPermissions(bleHelper?.getBleAdapter())) {
+        if (!hasPermissions(bleConnectionHelper?.getBleAdapter())) {
             Toast.makeText(this, getString(R.string.toast_incorrect_permissions), Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -101,7 +100,7 @@ class PagerActivity : AppCompatActivity(),
                 }
                 .setPositiveButton(getString(R.string.alert_btn_yes)) { dialog, id ->
                     dialog.dismiss()
-                    bleHelper?.disconnectGattServer()
+                    bleConnectionHelper?.disconnectGattServer()
                     super.onBackPressed()
                 }
                 .show()
@@ -220,9 +219,6 @@ class PagerActivity : AppCompatActivity(),
         return this.applicationContext
     }
 
-    override fun processScanResult(result: ScanResult) {}
-
-    override fun stopScan(){}
 
     // ----- Fragment interaction methods -----
     override fun unlinkBleDevice() {
@@ -231,7 +227,7 @@ class PagerActivity : AppCompatActivity(),
 
     override fun sendCommand(command: String?) {
         if (mConnected) {
-            bleHelper?.sendValueToDevice(command)
+            bleConnectionHelper?.sendValueToDevice(command)
         }
     }
 

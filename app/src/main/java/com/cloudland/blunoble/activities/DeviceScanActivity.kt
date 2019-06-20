@@ -22,19 +22,19 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.utils.BleHelper
-import com.cloudland.blunoble.utils.BleInteractor
+import com.cloudland.blunoble.bleUtils.BleInteractor
+import com.cloudland.blunoble.bleUtils.BleScanHelper
 import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_device_scan.*
 
-class DeviceScanActivity : AppCompatActivity(), BleInteractor {
+class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
 
     companion object {
         private var returnFromResult = false
     }
 
     private var mListAdapter: LeDeviceListAdapter? = null
-    private var bleHelper: BleHelper? = null
+    private var bleScanHelper: BleScanHelper? = null
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
@@ -53,7 +53,7 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor {
             finish()
         }
 
-        bleHelper = BleHelper(this, false)
+        bleScanHelper = BleScanHelper(this)
 
         if (returnFromResult) {
             startScan()
@@ -67,7 +67,7 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor {
     override fun onResume() {
         super.onResume()
 
-        // Initialize list view adapter.
+        // Initialize list view adapter
         mListAdapter = LeDeviceListAdapter()
         foundDevicesList.adapter = mListAdapter
 
@@ -135,7 +135,7 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor {
     }
 
     private fun startScan() {
-        if (mScanning || !hasPermissions(bleHelper?.getBleAdapter())) {
+        if (mScanning || !hasPermissions(bleScanHelper?.getBleAdapter())) {
             Log.d(Utils.TAG, "Cannot scan")
             return
         }
@@ -145,12 +145,12 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor {
         invalidateOptionsMenu()
         tvScanInstr.visibility = View.INVISIBLE
 
-        bleHelper?.startScan()
+        bleScanHelper?.startScan()
     }
 
     override fun stopScan() {
         if (mScanning) {
-            bleHelper?.stopScan()
+            bleScanHelper?.stopScan()
             mScanning = false
             invalidateOptionsMenu()
 
@@ -164,7 +164,7 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor {
         }
     }
 
-    // BleInteractor interface methods
+    // BleInteractor scanner interface methods
     override fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
         if (bleAdapter == null || !bleAdapter.isEnabled) {
             Log.d(Utils.TAG, "adapter fail")
@@ -199,12 +199,6 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor {
     override fun getContext(): Context {
         return this.applicationContext
     }
-
-    override fun onGattDisconnect() {}
-
-    override fun onGattConnectionResult(connect: Boolean) {}
-
-    override fun onWriteSuccessOrFailure(result: Boolean) {}
 
     override fun processScanResult(result: ScanResult) {
         result.device?.apply {

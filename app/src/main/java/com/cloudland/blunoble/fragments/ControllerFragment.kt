@@ -12,6 +12,9 @@ import android.widget.ImageButton
 import com.cloudland.blunoble.R
 import kotlinx.android.synthetic.main.fragment_controller.*
 
+/*
+A video game style controller fragment
+ */
 class ControllerFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null

@@ -13,7 +13,9 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import com.cloudland.blunoble.utils.Utils
 
-
+/*
+Fragment to input one-time commands
+ */
 class TerminalFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
