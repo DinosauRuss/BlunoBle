@@ -1,8 +1,11 @@
 package com.cloudland.blunoble.utils
 
-import android.util.Log
-import java.io.UnsupportedEncodingException
-import kotlin.text.Charsets.UTF_8
+import android.app.Activity
+import android.content.res.Resources
+import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AppCompatActivity
+import android.view.inputmethod.InputMethodManager
+
 
 class Utils {
 
@@ -14,24 +17,22 @@ class Utils {
         const val CHARACTERISTIC_SERIAL_RXTX_UUID = "0000dfb1-0000-1000-8000-00805f9b34fb"
         const val CHARACTERISTIC_SERIAL_COMMAND_UUID = "0000dfb2-0000-1000-8000-00805f9b34fb"
 
-        fun bytesFromString(string: String): ByteArray {
-            var byteStr = ByteArray(0)
-            try {
-                byteStr = string.toByteArray(UTF_8)
-            } catch (e: UnsupportedEncodingException) {
-                Log.e(TAG, "Failed to convert message string to byte array")
-            }
-            return byteStr
+        fun spToPx(sp: Int): Int {
+            return Math.round(Resources.getSystem().displayMetrics.scaledDensity * sp)
         }
 
-        fun stringFromBytes(bytes: ByteArray): String? {
-            var stringByte: String? = null
+        fun dpToPx(dp: Int): Int {
+            return Math.round(Resources.getSystem().displayMetrics.density * dp)
+        }
+
+        fun closeSoftKeyboard(activity: AppCompatActivity?) {
             try {
-                stringByte = String(bytes, UTF_8)
-            } catch (e: UnsupportedEncodingException) {
-                Log.e(TAG, "Unable to convert message bytes to string")
+                val input =
+                    activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager?
+                input?.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            return stringByte
         }
     }
 

@@ -10,6 +10,6 @@ interface GattClientActionListener {
 
     fun connectionResult(result: Boolean)
 
-    fun writeSuccess(result: Boolean)
+    fun writeSuccessOrFail(result: Boolean)
 
 }

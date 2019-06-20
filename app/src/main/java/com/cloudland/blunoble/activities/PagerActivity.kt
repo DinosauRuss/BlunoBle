@@ -3,11 +3,6 @@ package com.cloudland.blunoble.activities
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeScanner
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -23,27 +18,23 @@ import android.view.View
 import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
-import com.cloudland.blunoble.utils.GattClientActionListener
-import com.cloudland.blunoble.utils.GattClientCallback
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_pager.*
 
-class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentInteractionListener {
+class PagerActivity : AppCompatActivity(),
+    OnFragmentInteractionListener,
+    BleInteractor {
 
     companion object {
         const val INTENT_EXTRAS_NAME = "name"
         const val INTENT_EXTRAS_ADDRESS = "address"
 
-        private var bleAdapter: BluetoothAdapter? = null
-        private var bleScanner: BluetoothLeScanner? = null
-        private var bleGatt: BluetoothGatt? = null
-        private var mCharacteristic: BluetoothGattCharacteristic? = null
-
         private var mConnected = false
-
-        private var DEVICE_ADDR: String? = null
+        private var deviceName: String? = null
     }
+
+    private var bleHelper: BleHelper? = null
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
@@ -52,17 +43,13 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pager)
 
-        val intenta = intent
-        val deviceName = intenta.getStringExtra(INTENT_EXTRAS_NAME)
-        val deviceAddress = intenta.getStringExtra(INTENT_EXTRAS_ADDRESS)
-        DEVICE_ADDR = deviceAddress
+        val receivedIntent = intent
+        deviceName = receivedIntent.getStringExtra(INTENT_EXTRAS_NAME)
+        val deviceAddress = receivedIntent.getStringExtra(INTENT_EXTRAS_ADDRESS)
+
+        bleHelper = BleHelper(this, deviceAddress)
 
         if (!mConnected) {
-            val bleManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            bleAdapter = bleManager.adapter
-            bleScanner = bleAdapter?.bluetoothLeScanner
-            connectDevice(deviceAddress)
-
             setLoadingVisibility()
         }
 
@@ -87,7 +74,7 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
             finish()
         }
 
-        if (!hasPermissions()) {
+        if (!hasPermissions(bleHelper?.getBleAdapter())) {
             Toast.makeText(this, getString(R.string.toast_incorrect_permissions), Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -103,22 +90,106 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
     override fun onBackPressed() {
         if (mConnected) {
             AlertDialog.Builder(this, R.style.MyDialogStyle)
-                .setTitle( "${getString(R.string.alert_disconnect_title)}!" )
-                .setMessage(getString(R.string.alert_disconnect_message).format(bleGatt?.device?.name))
+                .setTitle("${getString(R.string.alert_disconnect_title)}!")
+                .setMessage(getString(R.string.alert_disconnect_message).format(deviceName))
                 .setNegativeButton(getString(R.string.alert_btn_no)) { dialog, id ->
                     dialog.dismiss()
                 }
                 .setPositiveButton(getString(R.string.alert_btn_yes)) { dialog, id ->
                     dialog.dismiss()
-                    disconnectGattServer()
+                    bleHelper?.disconnectGattServer()
                     super.onBackPressed()
                 }
                 .show()
         }
     }
 
-    private fun hasPermissions(): Boolean {
-        if (bleAdapter == null || bleAdapter?.isEnabled == false) {
+    private fun setLoadingVisibility() {
+        viewPager.visibility = View.INVISIBLE
+        tabLayout.visibility = View.INVISIBLE
+        progressBarPagerActivity.visibility = View.VISIBLE
+        val avd =
+            AnimatedVectorDrawableCompat.create(this, R.drawable.avd_progress)
+        avd?.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+            override fun onAnimationEnd(drawable: Drawable?) {
+                progressBarPagerActivity.post { avd.start() }
+            }
+        })
+        progressBarPagerActivity.setImageDrawable(avd)
+        avd?.start()
+    }
+
+    private fun setConnectedVisibility() {
+        val drawable = progressBarPagerActivity.drawable
+        if (drawable is AnimatedVectorDrawableCompat) {
+            drawable.stop()
+        }
+
+        progressBarPagerActivity.visibility = View.INVISIBLE
+        viewPager.visibility = View.VISIBLE
+        tabLayout.visibility = View.VISIBLE
+    }
+
+    // ----- Ble interactor methods -----
+    // Methods get called from a GattClientCallback
+    // Need runOnUiThread
+    override fun onGattDisconnect() {
+        Log.d(Utils.TAG, "pager disconnectGatt")
+        if (mConnected) {
+            this.runOnUiThread {
+                Toast.makeText(this, getString(R.string.toast_device_disconnected), Toast.LENGTH_SHORT).show()
+            }
+        }
+        mConnected = false
+    }
+
+    override fun onGattConnectionResult(connect: Boolean) {
+        when (connect) {
+            true -> {
+                if (!mConnected) {
+                    mConnected = true
+                    this.runOnUiThread {
+                        setConnectedVisibility()
+                        Toast.makeText(
+                            this,
+                            getString(R.string.toast_connected_to).format(deviceName),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            }
+            false -> {
+                mConnected = false
+                this.runOnUiThread {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.toast_connect_fail),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+                finish()
+            }
+        }
+    }
+
+    override fun onWriteSuccessOrFailure(result: Boolean) {
+        if (!result) {
+            this.runOnUiThread {
+                Toast.makeText(this, R.string.toast_failure, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun requestBleEnable() {
+        val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
+    }
+
+    override fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
+//        if (bleAdapter == null || bleAdapter?.isEnabled == false) {
+        if (bleAdapter == null || !bleAdapter.isEnabled) {
             requestBleEnable()
             return false
         } else if (!hasLocationPermission()) {
@@ -126,20 +197,6 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
             return false
         }
         return true
-    }
-
-    private fun requestBleEnable() {
-        val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
-    }
-
-    private fun connectDevice(address: String) {
-        if (hasPermissions()) {
-            val device = bleAdapter?.getRemoteDevice(address)
-            bleGatt = device?.connectGatt(this, false,
-                GattClientCallback(this)
-            )
-        }
     }
 
     private fun hasLocationPermission(): Boolean {
@@ -156,122 +213,15 @@ class PagerActivity : AppCompatActivity(), GattClientActionListener, OnFragmentI
         )
     }
 
-    private fun sendValueToDevice(message: String?) {
-        message?.apply {
-            if (mCharacteristic != null && bleGatt != null && mConnected) {
-                mCharacteristic!!.setValue(this)
-                bleGatt!!.writeCharacteristic(mCharacteristic)
-            }
-        }
-    }
-
-    private fun setLoadingVisibility() {
-        viewPager.visibility = View.INVISIBLE
-        tabLayout.visibility = View.INVISIBLE
-        progressBarPagerActivity.visibility = View.VISIBLE
-        val drawable =
-            AnimatedVectorDrawableCompat.create(this, R.drawable.avd_progress)
-        drawable?.registerAnimationCallback(object: Animatable2Compat.AnimationCallback() {
-            override fun onAnimationEnd(drawableAnim: Drawable?) {
-                progressBarPagerActivity.post {drawable.start()}
-            }
-        })
-        progressBarPagerActivity.setImageDrawable(drawable)
-        drawable?.start()
-    }
-
-    private fun setConnectedVisibility() {
-        viewPager.visibility = View.VISIBLE
-        tabLayout.visibility = View.VISIBLE
-        val drawable = progressBarPagerActivity.drawable
-        if (drawable is AnimatedVectorDrawableCompat) {
-            drawable.stop()
-        }
-        progressBarPagerActivity.visibility = View.GONE
-    }
-
-
-    // ----- Gatt action Listener -----
-
-    override fun disconnectGattServer() {
-        Log.d(Utils.TAG, "pager disconnectGatt")
-        mConnected = false
-        Toast.makeText(this, getString(R.string.toast_device_disconnected), Toast.LENGTH_SHORT).show()
-        bleGatt?.apply {
-            this.disconnect()
-            this.close()
-            bleGatt = null
-            mCharacteristic = null
-        }
-    }
-
-    override fun setSerialRxTxCharacteristic(characteristic: BluetoothGattCharacteristic?) {
-        mCharacteristic = characteristic
-    }
-
-    override fun connectionResult(result: Boolean) {
-        when (result) {
-            true -> {
-                mConnected = true
-                this.runOnUiThread {
-                    setConnectedVisibility()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.toast_connected_to).format(bleGatt?.device?.name),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }
-            false -> {
-                mConnected = false
-                runOnUiThread {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.toast_connect_fail),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                    finish()
-                }
-
-            }
-        }
-    }
-
-    override fun writeSuccess(result: Boolean) {
-        when (result) {
-//            true -> {
-//                runOnUiThread {
-//                    Toast.makeText(
-//                        this,
-//                        getString(R.string.toast_send_data).format(getString(R.string.toast_success)),
-//                        Toast.LENGTH_SHORT
-//                    )
-//                        .show()
-//                }
-//            }
-            false -> {
-                runOnUiThread {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.toast_send_data).format(getString(R.string.toast_failure)),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }
-        }
-    }
-
     // ----- Fragment interaction methods -----
-
     override fun unlinkBleDevice() {
         onBackPressed()
     }
 
     override fun sendCommand(command: String?) {
-        sendValueToDevice(command)
+        if (mConnected) {
+            bleHelper?.sendValueToDevice(command)
+        }
     }
 
     override fun checkConnected(): Boolean {

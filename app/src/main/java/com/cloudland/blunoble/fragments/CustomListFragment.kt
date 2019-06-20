@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.utils.RecyclerAdapter
 import com.cloudland.blunoble.utils.SharedPrefObject
+import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.alert_dialog_input.view.*
 import kotlinx.android.synthetic.main.fragment_custom_list.*
 
@@ -98,9 +100,11 @@ class CustomListFragment : Fragment(), RecyclerAdapter.RecyclerInteractionListen
                 view.edtAlertCommand.text?.takeIf { it.isNotEmpty() }?.apply {
                     addCommandToList(this.toString())
                 }
+                Utils.closeSoftKeyboard(this.activity as AppCompatActivity)
                 dialog.dismiss()
             }
             .setNegativeButton(getString(R.string.alert_btn_cancel)) { dialog, which ->
+                Utils.closeSoftKeyboard(this.activity as AppCompatActivity)
                 dialog.dismiss()
             }
             .show()

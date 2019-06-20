@@ -52,7 +52,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         sharedPrefObject = null
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        Utils.closeSoftKeyboard(this)
 
         super.onDestroy()
     }

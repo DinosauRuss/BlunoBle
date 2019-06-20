@@ -6,8 +6,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.cloudland.blunoble.R
 import kotlinx.android.synthetic.main.fragment_terminal.*
+import android.app.Activity
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.inputmethod.InputMethodManager
+import com.cloudland.blunoble.utils.Utils
 
 
 class TerminalFragment : Fragment() {
@@ -19,15 +23,21 @@ class TerminalFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_terminal, container, false)
+        return inflater.inflate(com.cloudland.blunoble.R.layout.fragment_terminal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnSendFragCommand.setOnClickListener { listener?.sendCommand(getTextFromEdt()) }
+        btnSendFragCommand.setOnClickListener {
+            //            listener?.sendCommand(getTextFromEdt())
+            getTextFromEdt().takeIf { it != null }?.also { listener?.sendCommand(it) }
+            Utils.closeSoftKeyboard(this.activity as AppCompatActivity)
+
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -44,9 +54,16 @@ class TerminalFragment : Fragment() {
         listener = null
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+
+        if (!isVisibleToUser) {
+            activity?.apply { Utils.closeSoftKeyboard(this as AppCompatActivity) }
+        }
+    }
+
     private fun getTextFromEdt(): String? {
-//        val msg =  if (edtMsgFragCommand.text.isNotEmpty()) "${edtMsgFragCommand.text}\n" else null
-        val msg =  if (edtMsgFragCommand.text.isNotEmpty()) "${edtMsgFragCommand.text}" else null
+        val msg = if (edtMsgFragCommand.text.isNotEmpty()) "${edtMsgFragCommand.text}" else null
         msg?.apply { edtMsgFragCommand.setText("") }
 
         return msg

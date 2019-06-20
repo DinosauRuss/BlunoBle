@@ -70,6 +70,7 @@
     <string name="contentDescription_b" translatable="false">B</string>
     <string name="contentDescription_x" translatable="false">X</string>
     <string name="contentDescription_y" translatable="false">Y</string>
+    <string name="contentDescription_loading">Loading</string>
 
     <string name="PREF_JSON_KEY" translatable="false">PREF_JSON_KEY</string>
 
