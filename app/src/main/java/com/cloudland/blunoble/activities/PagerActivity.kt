@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.cloudland.blunoble.R
+import com.cloudland.blunoble.activities.settings.SettingsActivity
 import com.cloudland.blunoble.bleUtils.BleConnectionHelper
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
 import com.cloudland.blunoble.bleUtils.BleInteractor

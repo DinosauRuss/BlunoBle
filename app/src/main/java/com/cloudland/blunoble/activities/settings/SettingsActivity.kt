@@ -1,25 +1,24 @@
-package com.cloudland.blunoble.activities
+package com.cloudland.blunoble.activities.settings
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.design.widget.TextInputEditText
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.utils.SharedPrefObject
 import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_settings.*
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), SettingsContract.SettingsView {
 
-    private var sharedPrefObject: SharedPrefObject? = null
+    private var mSettingsPresenter: SettingsContract.SettingsPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        // Text inputs from xml
         val inputs = arrayListOf(
             prefInputUp,
             prefInputDown,
@@ -31,10 +30,10 @@ class SettingsActivity : AppCompatActivity() {
             prefInputY
             )
 
-        sharedPrefObject = SharedPrefObject(this)
+        mSettingsPresenter = SettingsPresenter(this)
         fillTextInputLayouts(inputs)
 
-        btnSaveSettingsActivity.setOnClickListener { saveCommandsToSharedPrefs(inputs) }
+        btnSaveSettingsActivity.setOnClickListener { saveTextInputsToSharedPrefs(inputs) }
         btnCancelSettingsActivity.setOnClickListener { onBackPressed() }
 
         // Prevent keyboard from opening automatically
@@ -43,16 +42,9 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (sharedPrefObject == null) {
-            sharedPrefObject = SharedPrefObject(this)
-        }
-    }
-
     override fun onDestroy() {
-        sharedPrefObject = null
         Utils.closeSoftKeyboard(this)
+        mSettingsPresenter?.onDestroy()
 
         super.onDestroy()
     }
@@ -62,7 +54,11 @@ class SettingsActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    private fun saveCommandsToSharedPrefs(textInputs: ArrayList<TextInputEditText>) {
+    override fun getContext(): Context? {
+        return this.applicationContext
+    }
+
+    private fun saveTextInputsToSharedPrefs(textInputs: ArrayList<TextInputEditText>) {
         val button_pref_keys = resources.obtainTypedArray(R.array.BUTTON_PREF_KEYS)
         val button_pref_defaults = resources.obtainTypedArray(R.array.BUTTON_PREF_DEFAULTS)
 
@@ -75,7 +71,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             val key = button_pref_keys.getString(index)
             if (key != null) {
-                sharedPrefObject?.insertSinglecommand(key, saveCommand)
+                mSettingsPresenter?.saveSinglePref(key, saveCommand)
             }
         }
         button_pref_keys.recycle()
@@ -86,17 +82,16 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun fillTextInputLayouts(textInputs: ArrayList<TextInputEditText>) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        Log.d(Utils.TAG, "${prefs.all}")
-        Log.d(Utils.TAG, "pref obj: $sharedPrefObject")
         val button_pref_keys = resources.obtainTypedArray(R.array.BUTTON_PREF_KEYS)
         val button_pref_defaults = resources.obtainTypedArray(R.array.BUTTON_PREF_DEFAULTS)
 
         textInputs.forEachIndexed { index, input ->
             val key = button_pref_keys.getString(index)
             val default = button_pref_defaults.getString(index) ?: "0"
-            val valFromPref = sharedPrefObject?.retrieveSingleCommand(key, default) ?: default
-            input.setText(valFromPref)
+            if (key != null) {
+                val valFromPref = mSettingsPresenter?.getSinglePref(key, default)
+                input.setText(valFromPref)
+            }
         }
 
         button_pref_keys.recycle()

@@ -198,7 +198,7 @@ class ScanActivity :
         val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
         startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
     }
-    
+
     //  ScanContract interface methods
     override fun getContext(): Context {
         return this.applicationContext
