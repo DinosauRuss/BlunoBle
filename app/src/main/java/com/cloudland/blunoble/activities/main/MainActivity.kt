@@ -1,4 +1,4 @@
-package com.cloudland.blunoble.activities
+package com.cloudland.blunoble.activities.main
 
 import android.Manifest
 import android.app.Activity
@@ -19,26 +19,25 @@ import android.view.View
 import android.widget.Toast
 import com.cloudland.blunoble.R
 import com.cloudland.blunoble.activities.settings.SettingsActivity
-import com.cloudland.blunoble.bleUtils.BleConnectionHelper
 import com.cloudland.blunoble.fragments.OnFragmentInteractionListener
-import com.cloudland.blunoble.bleUtils.BleInteractor
 import com.cloudland.blunoble.utils.Utils
 import com.cloudland.blunoble.utils.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_pager.*
 
-class PagerActivity : AppCompatActivity(),
+class MainActivity : AppCompatActivity(),
     OnFragmentInteractionListener,
-    BleInteractor.Connector {
+//    BleInteractor.Connector,
+    MainContract.MainView {
 
     companion object {
         const val INTENT_EXTRAS_NAME = "name"
         const val INTENT_EXTRAS_ADDRESS = "address"
 
         private var mConnected = false
-        private var deviceName: String? = null
-    }
+        private var deviceName: String? = null }
 
-    private var bleConnectionHelper: BleConnectionHelper? = null
+//    private var bleConnectionHelper: BleConnectionHelper? = null
+    private var mMainPresenter: MainContract.MainPresenter? = null
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
@@ -51,7 +50,10 @@ class PagerActivity : AppCompatActivity(),
         deviceName = receivedIntent.getStringExtra(INTENT_EXTRAS_NAME)
         val deviceAddress = receivedIntent.getStringExtra(INTENT_EXTRAS_ADDRESS)
 
-        bleConnectionHelper = BleConnectionHelper(this, deviceAddress, mConnected)
+//        bleConnectionHelper = BleConnectionHelper(this, deviceAddress,
+//            mConnected
+//        )
+        mMainPresenter = MainPresenter(this, deviceAddress, mConnected)
 
         if (!mConnected) {
             setLoadingVisibility()
@@ -78,7 +80,8 @@ class PagerActivity : AppCompatActivity(),
             finish()
         }
 
-        if (!hasPermissions(bleConnectionHelper?.getBleAdapter())) {
+//        if (!hasPermissions(bleConnectionHelper?.getBleAdapter())) {
+        if (!hasPermissions(mMainPresenter?.getBleAdapter())) {
             Toast.makeText(this, getString(R.string.toast_incorrect_permissions), Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -101,7 +104,8 @@ class PagerActivity : AppCompatActivity(),
                 }
                 .setPositiveButton(getString(R.string.alert_btn_yes)) { dialog, id ->
                     dialog.dismiss()
-                    bleConnectionHelper?.disconnectGattServer()
+//                    bleConnectionHelper?.disconnectGattServer()
+                    mMainPresenter?.disconnect()
                     super.onBackPressed()
                 }
                 .show()
@@ -134,10 +138,12 @@ class PagerActivity : AppCompatActivity(),
         tabLayout.visibility = View.VISIBLE
     }
 
-    // ----- Ble interactor methods -----
-    // Methods get called from a GattClientCallback
-    // Need runOnUiThread
-    override fun onGattDisconnect() {
+    // MainContract.View methods
+    override fun getContext(): Context {
+        return this.applicationContext
+    }
+
+    override fun onDisconnectCallback() {
         Log.d(Utils.TAG, "pager disconnectGatt")
         if (mConnected) {
             this.runOnUiThread {
@@ -148,8 +154,8 @@ class PagerActivity : AppCompatActivity(),
         finish()
     }
 
-    override fun onGattConnectionResult(connect: Boolean) {
-        when (connect) {
+    override fun onConnectionCallback(connectSuccess: Boolean) {
+        when (connectSuccess) {
             true -> {
                 if (!mConnected) {
                     mConnected = true
@@ -179,8 +185,8 @@ class PagerActivity : AppCompatActivity(),
         }
     }
 
-    override fun onWriteSuccessOrFailure(result: Boolean) {
-        if (!result) {
+    override fun onWriteSuccess(success: Boolean) {
+        if (!success) {
             this.runOnUiThread {
                 Toast.makeText(this, R.string.toast_failure, Toast.LENGTH_SHORT).show()
             }
@@ -217,10 +223,6 @@ class PagerActivity : AppCompatActivity(),
         )
     }
 
-    override fun getContext(): Context {
-        return this.applicationContext
-    }
-
 
     // ----- Fragment interaction methods -----
     override fun unlinkBleDevice() {
@@ -229,7 +231,8 @@ class PagerActivity : AppCompatActivity(),
 
     override fun sendCommand(command: String?) {
         if (mConnected) {
-            bleConnectionHelper?.sendValueToDevice(command)
+//            bleConnectionHelper?.sendValueToDevice(command)
+            mMainPresenter?.sendValueToDevice(command)
         }
     }
 

@@ -13,11 +13,12 @@ Class to separate Ble connection logic
 class BleConnectionHelper(
     private val bleConnectInteractor: BleInteractor.Connector,
     address: String,
-    connected: Boolean)
-    : BleHelperClass(), GattClientActionListener {
+    connected: Boolean
+) : BleHelperClass(), GattClientActionListener {
 
     init {
-        val bleManager = bleConnectInteractor.getContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bleManager =
+            bleConnectInteractor.getContext()?.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bleAdapter = bleManager.adapter
         bleScanner = bleAdapter?.bluetoothLeScanner
         if (!connected) {
@@ -26,7 +27,7 @@ class BleConnectionHelper(
     }
 
     private fun connectDevice(address: String) {
-        if (bleConnectInteractor.hasPermissions(bleAdapter)) {
+        if (bleConnectInteractor.hasPermissions(bleAdapter) == true) {
             val device = bleAdapter?.getRemoteDevice(address)
             bleGatt = device?.connectGatt(
                 bleConnectInteractor.getContext(),

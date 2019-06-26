@@ -22,7 +22,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.activities.PagerActivity
+import com.cloudland.blunoble.activities.main.MainActivity
 import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_device_scan.*
 
@@ -131,9 +131,9 @@ class ScanActivity :
 
         val device: BluetoothDevice? = mListAdapter?.getDevice(position)
         device?.also {
-            val intento = Intent(this, PagerActivity::class.java)
-            intento.putExtra(PagerActivity.INTENT_EXTRAS_NAME, device.name)
-            intento.putExtra(PagerActivity.INTENT_EXTRAS_ADDRESS, device.address)
+            val intento = Intent(this, MainActivity::class.java)
+            intento.putExtra(MainActivity.INTENT_EXTRAS_NAME, device.name)
+            intento.putExtra(MainActivity.INTENT_EXTRAS_ADDRESS, device.address)
             startActivity(intento)
         }
     }
@@ -144,28 +144,8 @@ class ScanActivity :
             return
         }
 
-        mScanPresenter?.setScanning(true)
-        mListAdapter?.clear()
-        invalidateOptionsMenu()
-        tvScanInstr.visibility = View.INVISIBLE
-
+        setStartScanViews()
         mScanPresenter?.startScan()
-    }
-
-    private fun stopScan() {
-        if (mScanPresenter?.isScanning() == true) {
-            mScanPresenter?.stopScan()
-            mScanPresenter?.setScanning(false)
-            invalidateOptionsMenu()
-
-            mListAdapter?.also {
-                if (it.count > 0) {
-                    tvScanInstr.visibility = View.VISIBLE
-                } else {
-                    Toast.makeText(this, getString(R.string.toast_no_devices_found), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
     }
 
     private fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
@@ -199,15 +179,42 @@ class ScanActivity :
         startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
     }
 
+    private fun setStopScanViews() {
+        invalidateOptionsMenu()
+        mListAdapter?.also {
+            if (it.count > 0) {
+                tvScanInstr.visibility = View.VISIBLE
+            } else {
+                Toast.makeText(this, getString(R.string.toast_no_devices_found), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setStartScanViews() {
+        mListAdapter?.clear()
+        invalidateOptionsMenu()
+        tvScanInstr.visibility = View.INVISIBLE
+    }
+
     //  ScanContract interface methods
     override fun getContext(): Context {
         return this.applicationContext
+    }
+
+    override fun stopScan() {
+        if (mScanPresenter?.isScanning() == true) {
+            mScanPresenter?.stopScan()
+        }
     }
 
     override fun processScanResult(result: ScanResult) {
         result.device?.apply {
             mListAdapter?.addDevice(this)
         }
+    }
+
+    override fun onStopScanCallback() {
+        setStopScanViews()
     }
 
 

@@ -13,11 +13,6 @@ class ScanPresenter(private var scanView: ScanContract.ScanView?) :
     private var mScanning: Boolean = false
     private var bleScanHelper: BleScanHelper = BleScanHelper(this)
 
-
-    override fun setScanning(scanning: Boolean) {
-        mScanning = scanning
-    }
-
     override fun isScanning(): Boolean {
         return mScanning
     }
@@ -32,11 +27,14 @@ class ScanPresenter(private var scanView: ScanContract.ScanView?) :
 
     override fun startScan() {
         bleScanHelper.startScan()
+        mScanning = true
     }
 
     // BleScanner.Interactor methods
     override fun stopScan() {
+        mScanning = false
         bleScanHelper.stopScan()
+        scanView?.onStopScanCallback()
     }
 
     override fun getContext(): Context? {

@@ -5,7 +5,7 @@ import android.content.Context
 class SettingsContract {
 
     interface SettingsView {
-        fun getContext(): Context?
+        fun getContext(): Context
     }
 
     interface SettingsPresenter {

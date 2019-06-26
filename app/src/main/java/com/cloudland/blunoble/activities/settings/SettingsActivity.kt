@@ -54,7 +54,7 @@ class SettingsActivity : AppCompatActivity(), SettingsContract.SettingsView {
         super.onBackPressed()
     }
 
-    override fun getContext(): Context? {
+    override fun getContext(): Context {
         return this.applicationContext
     }
 

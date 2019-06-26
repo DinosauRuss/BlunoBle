@@ -11,11 +11,13 @@ class ScanContract {
 
         fun processScanResult(result: ScanResult)
 
+        fun stopScan()
+
+        fun onStopScanCallback()
+
     }
 
     interface ScanPresenter {
-        fun setScanning(scanning: Boolean)
-
         fun isScanning(): Boolean
 
         fun onDestroy()

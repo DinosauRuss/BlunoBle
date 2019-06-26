@@ -14,8 +14,8 @@ abstract class BleInteractor {
     }
 
     interface Connector {
-        fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean
-        fun getContext(): Context
+        fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean?
+        fun getContext(): Context?
         fun onGattDisconnect()
         fun onGattConnectionResult(connect: Boolean)
         fun onWriteSuccessOrFailure(result: Boolean)
