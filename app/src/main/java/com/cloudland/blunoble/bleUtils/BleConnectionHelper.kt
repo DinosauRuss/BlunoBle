@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.util.Log
+import com.cloudland.blunoble.utils.Utils
 
 /*
 Class to separate Ble connection logic
@@ -37,6 +39,7 @@ class BleConnectionHelper(
     fun sendValueToDevice(message: String?) {
         message?.apply {
             if (mCharacteristic != null && bleGatt != null) {
+                Log.d(Utils.TAG, "inside if")
                 mCharacteristic!!.setValue(this)
                 bleGatt!!.writeCharacteristic(mCharacteristic)
             }

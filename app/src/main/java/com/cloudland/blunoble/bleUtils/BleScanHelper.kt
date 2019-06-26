@@ -17,8 +17,8 @@ Class to separate Ble scanning logic
 class BleScanHelper(private val bleScanInteractor: BleInteractor.Scanner): BleHelperClass() {
 
     init {
-        val bleManager = bleScanInteractor.getContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bleAdapter = bleManager.adapter
+        val bleManager: BluetoothManager? = bleScanInteractor.getContext()?.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bleAdapter = bleManager?.adapter
         bleScanner = bleAdapter?.bluetoothLeScanner
     }
 

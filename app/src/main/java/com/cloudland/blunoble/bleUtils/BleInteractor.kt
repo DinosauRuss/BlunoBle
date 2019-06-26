@@ -7,8 +7,8 @@ import android.content.Context
 abstract class BleInteractor {
 
     interface Scanner {
-        fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean
-        fun getContext(): Context
+//        fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean
+        fun getContext(): Context?
         fun processScanResult(result: ScanResult)
         fun stopScan()
     }

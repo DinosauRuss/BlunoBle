@@ -1,4 +1,4 @@
-package com.cloudland.blunoble.activities
+package com.cloudland.blunoble.activities.scan
 
 import android.Manifest
 import android.app.Activity
@@ -22,23 +22,23 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.cloudland.blunoble.R
-import com.cloudland.blunoble.bleUtils.BleInteractor
-import com.cloudland.blunoble.bleUtils.BleScanHelper
+import com.cloudland.blunoble.activities.PagerActivity
 import com.cloudland.blunoble.utils.Utils
 import kotlinx.android.synthetic.main.activity_device_scan.*
 
-class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
+class ScanActivity :
+    AppCompatActivity(),
+    ScanContract.ScanView {
 
     companion object {
         private var returnFromResult = false
     }
 
     private var mListAdapter: LeDeviceListAdapter? = null
-    private var bleScanHelper: BleScanHelper? = null
+    private var mScanPresenter: ScanContract.ScanPresenter? = null
 
     private val REQUEST_ENABLE_BT = 1
     private val REQUEST_FINE_LOCATION = 2
-    private var mScanning = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
             finish()
         }
 
-        bleScanHelper = BleScanHelper(this)
+        mScanPresenter = ScanPresenter(this)
 
         if (returnFromResult) {
             startScan()
@@ -76,14 +76,13 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
 
     override fun onStop() {
         super.onStop()
-
         stopScan()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu?.findItem(R.id.menu_refresh)?.setActionView(R.layout.action_progress)
-        if (!mScanning) {
+        if (mScanPresenter?.isScanning() != true) {
             menu?.findItem(R.id.menu_refresh)?.isVisible = false
             menu?.findItem(R.id.menu_scan)?.isVisible = true
             menu?.findItem(R.id.menu_stop)?.isVisible = false
@@ -120,8 +119,13 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onDestroy() {
+        mScanPresenter?.onDestroy()
+        super.onDestroy()
+    }
+
     private fun listItemClick(position: Int) {
-        if (mScanning) {
+        if (mScanPresenter?.isScanning() == true) {
             stopScan()
         }
 
@@ -135,23 +139,23 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
     }
 
     private fun startScan() {
-        if (mScanning || !hasPermissions(bleScanHelper?.getBleAdapter())) {
+        if (mScanPresenter?.isScanning() == true || !hasPermissions(mScanPresenter?.getBleAdapter())) {
             Log.d(Utils.TAG, "Cannot scan")
             return
         }
 
-        mScanning = true
+        mScanPresenter?.setScanning(true)
         mListAdapter?.clear()
         invalidateOptionsMenu()
         tvScanInstr.visibility = View.INVISIBLE
 
-        bleScanHelper?.startScan()
+        mScanPresenter?.startScan()
     }
 
-    override fun stopScan() {
-        if (mScanning) {
-            bleScanHelper?.stopScan()
-            mScanning = false
+    private fun stopScan() {
+        if (mScanPresenter?.isScanning() == true) {
+            mScanPresenter?.stopScan()
+            mScanPresenter?.setScanning(false)
             invalidateOptionsMenu()
 
             mListAdapter?.also {
@@ -164,8 +168,7 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
         }
     }
 
-    // BleInteractor scanner interface methods
-    override fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
+    private fun hasPermissions(bleAdapter: BluetoothAdapter?): Boolean {
         if (bleAdapter == null || !bleAdapter.isEnabled) {
             Log.d(Utils.TAG, "adapter fail")
             requestBleEnable()
@@ -195,7 +198,8 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
         val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
         startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
     }
-
+    
+    //  ScanContract interface methods
     override fun getContext(): Context {
         return this.applicationContext
     }
@@ -205,6 +209,8 @@ class DeviceScanActivity : AppCompatActivity(), BleInteractor.Scanner {
             mListAdapter?.addDevice(this)
         }
     }
+
+
 
     inner class LeDeviceListAdapter : BaseAdapter() {
 

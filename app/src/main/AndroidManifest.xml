@@ -21,7 +21,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.PagerActivity" />
-        <activity android:name=".activities.DeviceScanActivity">
+        <activity android:name=".activities.scan.ScanActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

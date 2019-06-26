@@ -35,6 +35,7 @@ class GattClientCallback( private val mClientActionListener: GattClientActionLis
         if (status != BluetoothGatt.GATT_SUCCESS) {
             Log.d(Utils.TAG, "Connect fail")
             mClientActionListener.disconnectGattServer()
+            mClientActionListener.connectionResult(false)
             return
         }
 
@@ -51,6 +52,7 @@ class GattClientCallback( private val mClientActionListener: GattClientActionLis
 
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
         super.onCharacteristicWrite(gatt, characteristic, status)
+        Log.d(Utils.TAG, "onCharacteristicWrite")
         if (status == BluetoothGatt.GATT_SUCCESS) {
             Log.d(Utils.TAG, "characteristic write success")
 //            mClientActionListener.writeSuccessOrFail(true)
